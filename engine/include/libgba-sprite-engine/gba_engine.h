@@ -14,12 +14,17 @@
 
 #define GBA_SCREEN_WIDTH 240
 #define GBA_SCREEN_HEIGHT 160
+#define M4_WIDTH 240
+
+const unsigned int black[VRAM_PAGE_SIZE] = {};
 
 class GBAEngine {
 private:
     // WHY raw pointers? the engine does the transition and cleanup work itself
     Scene* currentScene;
     Scene* sceneToTransitionTo;
+
+    u16* vid_page;
 
     static std::unique_ptr<Timer> timer;
     static std::unique_ptr<SoundControl> activeChannelA;
@@ -34,6 +39,11 @@ private:
     static void startOnVBlank() { REG_IME = 1; }
     static void stopOnVBlank() { REG_IME = 0; }
     static void onVBlank();
+
+    void render();
+    void renderClear();
+    inline void plotPixel(int x, int y, u8 clrId);
+    void flipPage();
 
 public:
     GBAEngine();

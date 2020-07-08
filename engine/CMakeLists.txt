@@ -9,7 +9,7 @@ add_library(${PROJECT_NAME}
         src/gba/sin_lut.s
         src/gba/tonc_bios.s
         src/gba_engine.cpp
-        src/sound_control.cpp src/scene.cpp src/timer.cpp include/libgba-sprite-engine/gbavector.h src/gbavector.cpp)
+        src/sound_control.cpp src/scene.cpp src/timer.cpp src/gbavector.cpp src/mesh.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

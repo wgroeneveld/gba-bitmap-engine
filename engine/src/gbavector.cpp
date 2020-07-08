@@ -4,10 +4,10 @@
 
 #include <libgba-sprite-engine/gbavector.h>
 
-VECTOR GBAVector::rotateAsCenter(VECTOR point, uint angle) {
+GBAVector GBAVector::rotateAsCenter(GBAVector point, FIXED angle) {
     auto center = this->v;
     s32 centerx = center.x, centery = center.y;
-    s32 defaultx = point.x, defaulty = point.y;
+    s32 defaultx = point.x(), defaulty = point.y();
 
     s32 cos = lu_cos(angle) >> 4;
     s32 sin = lu_sin(angle) >> 4;
@@ -15,9 +15,14 @@ VECTOR GBAVector::rotateAsCenter(VECTOR point, uint angle) {
     // affine matriches are 8.8 fixed point numbers, so shift all input 8 spaces up and forth
     // possibilities: instead of between [-1.0, 1.0] it's between [-256, +256]
     // 90° rotation in inversed y-axis needs to flip sin sign
-    return {
-            ( cos * (defaultx - centerx) + sin * (defaulty - centery) + (centerx << 8)) >> 8,
-            (-sin * (defaultx - centerx) + cos * (defaulty - centery) + (centery << 8)) >> 8};
+            /*
+    return GBAVector({
+                             ( cos * (defaultx - centerx) + sin * (defaulty - centery) + (centerx << 8)) >> 8,
+                             (-sin * (defaultx - centerx) + cos * (defaulty - centery) + (centery << 8)) >> 8});
+                       */
+    return GBAVector({
+            (fxmul(cos, (defaultx - centerx)) + fxmul(sin, (defaulty - centery)) + (centerx << 8)) >> 8,
+            (fxmul(-sin, (defaultx - centerx)) + fxmul(cos, (defaulty - centery) + (centery << 8))) >> 8});
 }
 
 std::deque<VECTOR> GBAVector::bresenhamLineTo(VECTOR dest) {

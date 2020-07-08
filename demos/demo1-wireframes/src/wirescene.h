@@ -6,9 +6,12 @@
 #define GBA_SPRITE_ENGINE_SAMPLE_START_SCENE_H
 
 #include <libgba-sprite-engine/scene.h>
+#include <libgba-sprite-engine/mesh.h>
+#include <memory>
 
 class WireScene : public Scene {
 private:
+    std::unique_ptr<Mesh> cube;
 
 public:
 
@@ -16,6 +19,7 @@ public:
 
     void load() override;
     void tick(u16 keys) override;
+    std::vector<Mesh*> meshes() override;
 
 };
 

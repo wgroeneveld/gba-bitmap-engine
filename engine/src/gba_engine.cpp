@@ -4,6 +4,8 @@
 
 #include <libgba-sprite-engine/gba/tonc_memdef.h>
 #include <libgba-sprite-engine/gba_engine.h>
+#include <cstring>
+#include <libgba-sprite-engine/gba/tonc_core.h>
 
 std::unique_ptr<SoundControl> GBAEngine::activeChannelA;
 std::unique_ptr<SoundControl> GBAEngine::activeChannelB;
@@ -104,7 +106,7 @@ void GBAEngine::enableTimer0AndVBlank() {
 GBAEngine::GBAEngine() {
     GBAEngine::timer = std::unique_ptr<Timer>(new Timer());
     // setup screen control flags
-    REG_DISPCNT = DCNT_MODE4 | DCNT_OBJ | DCNT_OBJ_1D | DCNT_BG0 | DCNT_BG1 | DCNT_BG2 | DCNT_BG3;
+    REG_DISPCNT = DCNT_MODE4 | DCNT_OBJ | DCNT_OBJ_1D | DCNT_BG2;
 
     // setup interrupt control flags for vblank IRQing (started only when sound played)
     REG_DISPSTAT |= DISPLAY_INTERRUPT_VBLANK_ENABLE;
@@ -114,6 +116,7 @@ GBAEngine::GBAEngine() {
     enableTimer0AndVBlank();
 
     REG_SNDDSCNT = 0;
+    vid_page = vid_mem_back;
 }
 
 void GBAEngine::update() {
@@ -126,6 +129,39 @@ void GBAEngine::update() {
 
     // TODO use software interrupt Vsyncing instead of 2 wasteful whiles
     vsync();
+    renderClear();
+    render();
+    flipPage();
+}
+
+void GBAEngine::flipPage() {
+    // toggle the write_buffer's page
+    vid_page= (COLOR*)((u32)vid_page ^ VRAM_PAGE_SIZE);
+    REG_DISPCNT ^= DCNT_PAGE;
+}
+
+// http://www.coranac.com/tonc/text/bitmaps.htm
+// this thing is supposed to be very slow. see link above.
+inline void GBAEngine::plotPixel(int x, int y, u8 clrId) {
+    u16 *dst = &vid_page[(y * M4_WIDTH + x) / 2];
+    if(x & 1) {
+        *dst = (*dst & 0xFF) | (clrId << 8);
+    } else {
+        *dst = (*dst & ~0xFF) | clrId;
+    }
+}
+
+// does the mesh rendering - to write mem before flipping
+void GBAEngine::render() {
+    for(auto& mesh :currentScene->meshes()) {
+        for(auto& vertex : mesh->vertices()) {
+            plotPixel(vertex->x(), vertex->y(), 1);
+        }
+    }
+}
+
+void GBAEngine::renderClear() {
+    dma3_cpy(vid_page, black, VRAM_PAGE_SIZE);
 }
 
 void GBAEngine::cleanupPreviousScene()  {
