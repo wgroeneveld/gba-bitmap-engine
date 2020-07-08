@@ -6,6 +6,7 @@
 #define GBA_BITMAP_ENGINE_PROJECT_GBAMATRIX_H
 
 #define MATRIX_DIMENSION 16
+#include <libgba-sprite-engine/math.h>
 
 #ifdef CODE_COMPILED_AS_PART_OF_TEST
     #include <libgba-sprite-engine/gba/tonc_math_stub.h>
@@ -13,20 +14,11 @@
     #include <libgba-sprite-engine/gba/tonc_math.h>
 #endif
 
-FIXED HALF = float2fx(0.5);
-FIXED ONE = int2fx(1);
-
 class GBAMatrix {
 private:
     FIXED m[MATRIX_DIMENSION];
 
 public:
-    inline static FIXED tan(FIXED angle) {
-        FIXED sin = lu_sin(angle) >> 4;
-        FIXED cos = lu_cos(angle) >> 4;
-
-        return fxdiv(sin, cos);
-    }
 
     inline static GBAMatrix zero() { return GBAMatrix(); }
     inline FIXED mAt(int index) const {
@@ -57,7 +49,7 @@ public:
 
     inline static GBAMatrix perspectiveFovLH(FIXED fov, FIXED aspect, FIXED znear, FIXED zfar) {
         auto matrix = GBAMatrix::zero();
-        FIXED tanResult = fxdiv(ONE, tan(fxmul(fov, HALF)));
+        FIXED tanResult = fxdiv(ONE, fxtan(fxmul(fov, HALF)));
         matrix.m[0] = fxdiv(tanResult, aspect);
         matrix.m[1] = matrix.m[2] = matrix.m[3] = 0;
         matrix.m[5] = tanResult;

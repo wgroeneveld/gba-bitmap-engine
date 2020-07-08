@@ -33,6 +33,7 @@ add_executable(unittest
         ../engine/src/palette/palette_manager.cpp
         ../engine/src/palette/combined_palette.cpp
         ../engine/src/timer.cpp
+        ../engine/src/math.cpp
         ../engine/src/gbavector.cpp
         timertest.cpp gbavectortest.cpp gbamatrixtest.cpp fixedpoinmathtest.cpp)
 

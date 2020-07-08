@@ -1,0 +1,8 @@
+//
+// Created by Wouter Groeneveld on 08/07/20.
+//
+
+#include <libgba-sprite-engine/math.h>
+
+FIXED HALF = float2fx(0.5);
+FIXED ONE = int2fx(1);

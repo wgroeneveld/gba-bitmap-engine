@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 #include <math.h>
 #include <libgba-sprite-engine/gbamatrix.h>
+#include <libgba-sprite-engine/math.h>
 
 class GBAMatrixSuite : public ::testing::Test {
 protected:
@@ -15,19 +16,6 @@ protected:
     }
 };
 
-TEST_F(GBAMatrixSuite, TanUtilityTests) {
-    // Math.sin(14) / Math.cos(14) = 0.99 / 0.13 = 7.2446
-    auto tanRef = sin(14) / cos(14);
-    auto realTan = tan(14);
-    ASSERT_EQ((std::floor(tanRef * 100) + .5) / 100, 7.245);
-    ASSERT_EQ((std::floor(realTan * 100) + .5) / 100, 7.245);
-
-    auto tanFakeLookupTables = ((lu_sin(14)) / (lu_cos(14))) << 4;
-    ASSERT_EQ((std::floor(tanFakeLookupTables  * 100) + .5) / 100, 7.245);
-
-    auto result = fx2float(GBAMatrix::tan(int2fx(14)));
-    ASSERT_EQ(result, 7.2446);
-}
 
 TEST_F(GBAMatrixSuite, PerspectiveFovLH_TestData) {
     /* IN:
@@ -51,5 +39,12 @@ TEST_F(GBAMatrixSuite, PerspectiveFovLH_TestData) {
     15: 0
      */
     auto result = GBAMatrix::perspectiveFovLH(float2fx(0.78), float2fx(1.6), float2fx(0.01), float2fx(1));
-    ASSERT_EQ(fx2float(result.mAt(0)), 1.52);
+
+    // hmm... is this correct? rounding issues aside?
+    ASSERT_EQ(rnd(fx2float(result.mAt(0))), 1.565f);
+    ASSERT_EQ(fx2float(result.mAt(1)), 0);
+    ASSERT_EQ(rnd(fx2float(result.mAt(5))), 2.505f);
+    ASSERT_EQ(rnd(fx2float(result.mAt(10))), 1.005f);
+    ASSERT_EQ(rnd(fx2float(result.mAt(14))), -0.005f);
+    ASSERT_EQ(fx2float(result.mAt(15)), 0);
 }

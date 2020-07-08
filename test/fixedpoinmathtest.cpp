@@ -6,6 +6,7 @@
 #include <math.h>
 #include <cmath>
 #include <libgba-sprite-engine/gba/tonc_math_stub.h>
+#include <libgba-sprite-engine/math.h>
 
 class FpSuite : public ::testing::Test {
 protected:
@@ -15,30 +16,6 @@ protected:
     virtual void SetUp() {
     }
 };
-
-float rnd(float val) {
-    return (float) ((std::floor(val * 100) + .5) / 100);
-}
-
-float gr2rad(uint grad) {
-    return grad*M_PI/180;
-}
-
-FIXED gr2lut(uint grad) {
-    return 65535 / (360 / grad);
-}
-
-FIXED rad2lut(float rad) {
-    return gr2lut(rad * 180 / M_PI);
-}
-
-float fx12ToFloat(FIXED fx) {
-    return fx / (float) (1<<12);
-}
-
-FIXED fx12Tofx8(FIXED fx12) {
-    return fx12 >> 4;
-}
 
 
 // from LUT doxygen:
@@ -63,6 +40,25 @@ TEST_F(FpSuite, LUTValueTests) {
     ASSERT_EQ(rnd(sinLutConv8), 0.995f);
 }
 
+TEST_F(FpSuite, TanFromFixedPointRadian) {
+    // 20 degrees is 0.34906577777777775 rad
+    // will be stored as .8f as input val
+    FIXED angle = float2fx(0.34906577777777775f);
+
+    float result = fx2float(fxtan(angle));
+    ASSERT_EQ(rnd(result), 0.355f);
+}
+
+
+TEST_F(FpSuite, SinFromFixedPointRadInput) {
+    // 20 degrees is 0.34906577777777775 rad
+    FIXED angle = float2fx(0.34906577777777775f);
+
+    FIXED lusin = lu_sin(fxrad2lut(angle));
+    float result = fx12ToFloat(lusin);
+    ASSERT_EQ(rnd(result), 0.335f);
+}
+
 TEST_F(FpSuite, TanUtilityTests) {
     // 20 degrees is 0.34906577777777775 rad
     // Math.sin(0.3...) / Math.cos(0.3...) = 0.3420 / 0.9396 = 0.3639...
@@ -75,7 +71,7 @@ TEST_F(FpSuite, TanUtilityTests) {
     FIXED lutalpha = rad2lut(rad);
     FIXED lusin = lu_sin(lutalpha), lucos = lu_cos(lutalpha);
 
-    std::cout << "sin(14) is " << fx12ToFloat(lusin) << " and cos(14) is " << fx12ToFloat(lucos) << std::endl;
+    std::cout << "sin(20) is " << fx12ToFloat(lusin) << " and cos(20) is " << fx12ToFloat(lucos) << std::endl;
 
     auto tanFakeLookupTables = fx2float(fxdiv(fx12Tofx8(lu_sin(lutalpha)), fx12Tofx8(lu_cos(lutalpha))));
     ASSERT_EQ(rnd(tanFakeLookupTables), 0.355f);
