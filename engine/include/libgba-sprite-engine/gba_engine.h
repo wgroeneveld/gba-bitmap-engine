@@ -23,6 +23,7 @@
 #define M4_WIDTH 240
 
 const unsigned int black[VRAM_PAGE_SIZE] = {};
+extern u16 *vid_page;
 
 class GBAEngine {
 private:
@@ -31,7 +32,6 @@ private:
     Camera currentCamera;
     Scene* sceneToTransitionTo;
 
-    u16* vid_page;
     MatrixFx projectionMatrix;
 
     static std::unique_ptr<Timer> timer;

@@ -7,10 +7,13 @@
 #include <cstring>
 #include <libgba-sprite-engine/gba/tonc_core.h>
 #include <libgba-sprite-engine/matrixfx.h>
+#include <libgba-sprite-engine/background/text_stream.h>
 
 std::unique_ptr<SoundControl> GBAEngine::activeChannelA;
 std::unique_ptr<SoundControl> GBAEngine::activeChannelB;
 std::unique_ptr<Timer> GBAEngine::timer;
+
+u16 *vid_page;
 
 void GBAEngine::vsync() {
     while (REG_VCOUNT >= 160);
@@ -169,13 +172,18 @@ void GBAEngine::render() {
         auto worldMatrix = MatrixFx::rotationYawPitchRoll(mesh->roty(), mesh->rotx(), mesh->rotz()) * MatrixFx::translation(mesh->position());
         auto transformMatrix = worldMatrix * viewMatrix * projectionMatrix;
 
+        int i = 0;
         for(auto& vertex : mesh->vertices()) {
             auto projectedPoint = project(*vertex.get(), transformMatrix).toInt();
             plotPixel(projectedPoint.x(), projectedPoint.y(), 1);
+
+            TextStream::instance().setText(std::to_string(i) + ":" + projectedPoint.to_string(), i, 1);
+            i++;
         }
     }
 
     /*
+     * according to the unit tests; it should do something like this:
     plotPixel(150, 40, 1);
     plotPixel(60, 40, 1);
     plotPixel(150, 140, 1);
