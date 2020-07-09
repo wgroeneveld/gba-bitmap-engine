@@ -9,6 +9,8 @@
 #include <libgba-sprite-engine/math.h>
 #include <libgba-sprite-engine/vectorfx.h>
 
+#include <cstdio>
+
 #ifdef CODE_COMPILED_AS_PART_OF_TEST
     #include <libgba-sprite-engine/gba/tonc_math_stub.h>
     #else
@@ -18,6 +20,13 @@
 class MatrixFx {
 private:
     FIXED m[MATRIX_DIMENSION];
+
+    inline std::string mstr(int index) {
+        char buffer[30];
+        snprintf(buffer, 30, "%4.3f", rnd(fx2float(m[index])));
+        std::string strObj4(buffer);
+        return strObj4;
+    }
 
 public:
 
@@ -95,6 +104,18 @@ public:
         m[13] = m42;
         m[14] = m43;
         m[15] = m44;
+    }
+    std::string to_string_m1() {
+        return "(" + mstr(0) + "," + mstr(1) + "," + mstr(2) + "," + mstr(3) +")";
+    }
+    std::string to_string_m2() {
+        return "(" + mstr(4) + "," + mstr(5) + "," + mstr(6) + "," + mstr(7) +")";
+    }
+    std::string to_string_m3() {
+        return "(" + mstr(8) + "," + mstr(9) + "," + mstr(10) + "," + mstr(11) +")";
+    }
+    std::string to_string_m4() {
+        return "(" + mstr(12) + "," + mstr(13) + "," + mstr(14) + "," + mstr(15) +")";
     }
 
     inline static VectorFx transformCoordinates(const VectorFx &vector, const MatrixFx &transformation) {

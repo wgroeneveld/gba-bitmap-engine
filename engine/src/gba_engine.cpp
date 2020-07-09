@@ -172,12 +172,17 @@ void GBAEngine::render() {
         auto worldMatrix = MatrixFx::rotationYawPitchRoll(mesh->roty(), mesh->rotx(), mesh->rotz()) * MatrixFx::translation(mesh->position());
         auto transformMatrix = worldMatrix * viewMatrix * projectionMatrix;
 
+        TextStream::instance().setText(transformMatrix.to_string_m1(), 1, 1);
+        TextStream::instance().setText(transformMatrix.to_string_m2(), 2, 1);
+        TextStream::instance().setText(transformMatrix.to_string_m3(), 3, 1);
+        TextStream::instance().setText(transformMatrix.to_string_m4(), 4, 1);
+
         int i = 0;
         for(auto& vertex : mesh->vertices()) {
             auto projectedPoint = project(*vertex.get(), transformMatrix).toInt();
             plotPixel(projectedPoint.x(), projectedPoint.y(), 1);
 
-            TextStream::instance().setText(std::to_string(i) + ":" + projectedPoint.to_string(), i, 1);
+            //TextStream::instance().setText(std::to_string(i) + ":" + projectedPoint.to_string(), i, 1);
             i++;
         }
     }
