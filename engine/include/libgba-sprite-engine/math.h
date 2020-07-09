@@ -10,12 +10,17 @@
     #include <libgba-sprite-engine/gba/tonc_math_stub.h>
     #else
     #include <libgba-sprite-engine/gba/tonc_math.h>
-#endif
+    #endif
+
+#include <cmath>
 
 // fixed point math things that were missing from TONC
 
 extern FIXED HALF;
 extern FIXED ONE;
+
+#define FIX12_SHIFT 12
+#define FIX12_SCALE ( 1<<FIX12_SHIFT		)
 
 // -----
 INLINE float gr2rad(uint grad);
@@ -25,6 +30,8 @@ INLINE FIXED fxrad2lut(FIXED rad);
 INLINE float fx12ToFloat(FIXED fx);
 INLINE FIXED fx12Tofx8(FIXED fx12);
 INLINE FIXED fxtan(FIXED fxrad);
+INLINE FIXED fxsin(FIXED fxrad);
+INLINE FIXED fxcos(FIXED fxrad);
 INLINE float rnd(float val);
 
 // ---- impl
@@ -50,19 +57,35 @@ INLINE FIXED fxrad2lut(FIXED rad) {
 }
 
 INLINE float fx12ToFloat(FIXED fx) {
-    return fx / (float) (1<<12);
+    return fx / (float) FIX12_SCALE;
+}
+
+INLINE FIXED fx12div(FIXED fa, FIXED fb) {
+    return ((fa)*FIX12_SCALE)/(fb);
 }
 
 INLINE FIXED fx12Tofx8(FIXED fx12) {
     return fx12 >> 4;
 }
 
+INLINE FIXED fxsin(FIXED fxrad) {
+    FIXED theta = fxrad2lut(fxrad);
+    FIXED sin = lu_sin(theta);
+    return fx12Tofx8(sin);
+}
+
+INLINE FIXED fxcos(FIXED fxrad) {
+    FIXED theta = fxrad2lut(fxrad);
+    FIXED cos = lu_cos(theta);
+    return fx12Tofx8(cos);
+}
+
 INLINE FIXED fxtan(FIXED fxrad) {
     FIXED theta = fxrad2lut(fxrad);
-    FIXED sin = fx12Tofx8(lu_sin(theta));
-    FIXED cos = fx12Tofx8(lu_cos(theta));
+    FIXED sin = lu_sin(theta);
+    FIXED cos = lu_cos(theta);
 
-    return fxdiv(sin, cos);
+    return fx12Tofx8(fx12div(sin, cos));
 }
 
 #endif //GBA_BITMAP_ENGINE_PROJECT_MATH_H

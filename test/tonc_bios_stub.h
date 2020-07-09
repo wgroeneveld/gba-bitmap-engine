@@ -12,13 +12,15 @@ namespace externMath {
 
     float root(float num) {
         return sqrt(num);
-        return 0;
     }
 
 }
 
-u32 Sqrt(u32 num) {
-    return float2fx(externMath::root(fx2float(num)));
+u32 Sqrt(u32 num16fx) {
+    // tonc's fx() methods are .8fx, and BIOS needs .16 (results are .8??)
+    // this means we expect the input to be .16f
+    float numfloat = num16fx / ( (float)( 1<<16	));
+    return float2fx(externMath::root(numfloat));
 }
 
 

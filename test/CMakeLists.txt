@@ -34,7 +34,7 @@ add_executable(unittest
         ../engine/src/palette/combined_palette.cpp
         ../engine/src/timer.cpp
         ../engine/src/math.cpp
-        ../engine/src/gbavector.cpp
-        timertest.cpp gbavectortest.cpp gbamatrixtest.cpp fixedpoinmathtest.cpp)
+        ../engine/src/vectorfx.cpp
+        timertest.cpp vectorfxtest.cpp matrixfxtest.cpp fixedpoinmathtest.cpp)
 
 target_link_libraries(unittest ${GTEST_LIBRARY}/build/libgtest.a ${GTEST_LIBRARY}/build/libgtest_main.a)

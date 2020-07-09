@@ -6,6 +6,7 @@
 #include <libgba-sprite-engine/gba_engine.h>
 #include <cstring>
 #include <libgba-sprite-engine/gba/tonc_core.h>
+#include <libgba-sprite-engine/matrixfx.h>
 
 std::unique_ptr<SoundControl> GBAEngine::activeChannelA;
 std::unique_ptr<SoundControl> GBAEngine::activeChannelB;
@@ -151,11 +152,28 @@ inline void GBAEngine::plotPixel(int x, int y, u8 clrId) {
     }
 }
 
+inline VectorFx GBAEngine::project(VectorFx coord, MatrixFx transMat) {
+    auto point = MatrixFx::transformCoordinates(coord, transMat);
+
+    auto x = fxmul(point.x(), GBA_SCREEN_WIDTH_FX) + fxdiv(GBA_SCREEN_WIDTH_FX, 2.0);
+    auto y = fxmul(-point.y(), GBA_SCREEN_HEIGHT_FX) + fxdiv(GBA_SCREEN_HEIGHT_FX, 2.0);
+    return VectorFx(x, y, 0);
+}
+
 // does the mesh rendering - to write mem before flipping
 void GBAEngine::render() {
+    auto viewMatrix = MatrixFx::lookAtLH(currentCamera.getPosition(), currentCamera.getTarget(), VectorFx::up());
+    // TODO float fxes and other stuff out of render loop?
+    auto projectionMatrix = MatrixFx::perspectiveFovLH(float2fx(0.78), fxdiv(GBA_SCREEN_WIDTH_FX, GBA_SCREEN_HEIGHT_FX), float2fx(0.01), ONE);
+
     for(auto& mesh :currentScene->meshes()) {
+
+        auto worldMatrix = MatrixFx::rotationYawPitchRoll(mesh->roty(), mesh->rotx(), mesh->rotz()) * MatrixFx::translation(mesh->position());
+        auto transformMatrix = worldMatrix * viewMatrix * projectionMatrix;
+
         for(auto& vertex : mesh->vertices()) {
-            plotPixel(vertex->x(), vertex->y(), 1);
+            auto projectedPoint = project(*vertex.get(), transformMatrix).toInt();
+            plotPixel(projectedPoint.x(), projectedPoint.y(), 1);
         }
     }
 }
@@ -183,4 +201,5 @@ void GBAEngine::setScene(Scene* scene) {
     bgPalette->persist();
 
     this->currentScene = scene;
+    this->currentCamera = this->currentScene->camera();
 }

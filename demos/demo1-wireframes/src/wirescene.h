@@ -7,6 +7,7 @@
 
 #include <libgba-sprite-engine/scene.h>
 #include <libgba-sprite-engine/mesh.h>
+#include <libgba-sprite-engine/camera.h>
 #include <memory>
 
 class WireScene : public Scene {
@@ -20,6 +21,7 @@ public:
     void load() override;
     void tick(u16 keys) override;
     std::vector<Mesh*> meshes() override;
+    Camera camera() override;
 
 };
 

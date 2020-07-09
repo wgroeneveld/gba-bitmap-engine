@@ -5,23 +5,32 @@
 #ifndef GBA_BITMAP_ENGINE_PROJECT_MESH_H
 #define GBA_BITMAP_ENGINE_PROJECT_MESH_H
 
-#include "gbavector.h"
+#include "vectorfx.h"
 #include <vector>
 #include <memory>
 
 class Mesh {
 private:
-    GBAVector position;
-    GBAVector rotation;
+    VectorFx pos;
+    VectorFx rot;
 
-    std::vector<std::unique_ptr<GBAVector>> verticesArr;
+    std::vector<std::unique_ptr<VectorFx>> verticesArr;
 
 public:
 
-    void add(GBAVector v);
-    inline std::vector<std::unique_ptr<GBAVector>> const& vertices() const {
+    void add(VectorFx v);
+    inline std::vector<std::unique_ptr<VectorFx>> const& vertices() const {
         return verticesArr;
     }
+    inline VectorFx position() { return pos; }
+    inline FIXED rotx() { return rot.x(); }
+    inline FIXED roty() { return rot.y(); }
+    inline FIXED rotz() { return rot.z(); }
+    inline void rotate(FIXED x, FIXED y) {
+        rot.setX(rot.x() + x);
+        rot.setY(rot.y() + y);
+    }
+
     explicit Mesh() {}
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;

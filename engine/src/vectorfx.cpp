@@ -2,9 +2,9 @@
 // Created by Wouter Groeneveld on 14/12/18.
 //
 
-#include <libgba-sprite-engine/gbavector.h>
+#include <libgba-sprite-engine/vectorfx.h>
 
-GBAVector GBAVector::rotateAsCenter(GBAVector point, FIXED angle) {
+VectorFx VectorFx::rotateAsCenter(VectorFx point, FIXED angle) {
     auto center = this->v;
     s32 centerx = center.x, centery = center.y;
     s32 defaultx = point.x(), defaulty = point.y();
@@ -16,16 +16,16 @@ GBAVector GBAVector::rotateAsCenter(GBAVector point, FIXED angle) {
     // possibilities: instead of between [-1.0, 1.0] it's between [-256, +256]
     // 90° rotation in inversed y-axis needs to flip sin sign
             /*
-    return GBAVector({
+    return VectorFx({
                              ( cos * (defaultx - centerx) + sin * (defaulty - centery) + (centerx << 8)) >> 8,
                              (-sin * (defaultx - centerx) + cos * (defaulty - centery) + (centery << 8)) >> 8});
                        */
-    return GBAVector({
+    return VectorFx({
             (fxmul(cos, (defaultx - centerx)) + fxmul(sin, (defaulty - centery)) + (centerx << 8)) >> 8,
             (fxmul(-sin, (defaultx - centerx)) + fxmul(cos, (defaulty - centery) + (centery << 8))) >> 8});
 }
 
-std::deque<VECTOR> GBAVector::bresenhamLineTo(VECTOR dest) {
+std::deque<VECTOR> VectorFx::bresenhamLineTo(VECTOR dest) {
     // https://www.coranac.com/tonc/text/bitmaps.htm - Bresenham's line algorithm with fixed points
     VECTOR src = this->v;
     VECTOR step, delta;

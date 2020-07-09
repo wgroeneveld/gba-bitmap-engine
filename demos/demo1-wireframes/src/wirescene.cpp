@@ -11,8 +11,14 @@ const unsigned short pal[4] __attribute__((aligned(4))) = {
         0x0000, 0xFFFF, 0x3AE2
 };
 
+const FIXED pointZeroOne = float2fx(0.01);
+
 std::vector<Mesh*> WireScene::meshes() {
     return { cube.get() };
+}
+
+Camera WireScene::camera() {
+    return Camera(VectorFx::fromInt(0, 0, 10), VectorFx::fromInt(0, 0, 0));
 }
 
 void WireScene::load() {
@@ -20,22 +26,16 @@ void WireScene::load() {
     backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(pal, sizeof(pal)));
 
     cube = std::unique_ptr<Mesh>(new Mesh());
-    cube->add(GBAVector(1, 1, 1));
-    cube->add(GBAVector(10, 10, 1));
-    cube->add(GBAVector(20, 20, 1));
-    cube->add(GBAVector(30, 30, 1));
-    /*
-    cube->add(GBAVector(-1, 1, 1));
-    cube->add(GBAVector(1, 1, 1));
-    cube->add(GBAVector(-1, -1, 1));
-    cube->add(GBAVector(-1, -1, -1));
-    cube->add(GBAVector(-1, 1, -1));
-    cube->add(GBAVector(1, 1, -1));
-    cube->add(GBAVector(1, -1, 1));
-    cube->add(GBAVector(-1, -1, -1));
-     */
+    cube->add(VectorFx(-1, 1, 1));
+    cube->add(VectorFx(1, 1, 1));
+    cube->add(VectorFx(-1, -1, 1));
+    cube->add(VectorFx(-1, -1, -1));
+    cube->add(VectorFx(-1, 1, -1));
+    cube->add(VectorFx(1, 1, -1));
+    cube->add(VectorFx(1, -1, 1));
+    cube->add(VectorFx(-1, -1, -1));
 }
 
 void WireScene::tick(u16 keys) {
-
+    cube->rotate(pointZeroOne, pointZeroOne);
 }

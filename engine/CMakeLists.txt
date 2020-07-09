@@ -10,7 +10,7 @@ add_library(${PROJECT_NAME}
         src/gba/tonc_bios.s
         src/gba_engine.cpp
         src/math.cpp
-        src/sound_control.cpp src/scene.cpp src/timer.cpp src/gbavector.cpp src/mesh.cpp)
+        src/sound_control.cpp src/scene.cpp src/timer.cpp src/vectorfx.cpp src/mesh.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

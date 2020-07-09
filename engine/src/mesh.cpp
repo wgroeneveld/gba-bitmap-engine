@@ -6,7 +6,7 @@
 #include <memory>
 
 
-void Mesh::add(GBAVector v) {
-    verticesArr.push_back(std::unique_ptr<GBAVector>(new GBAVector(v)));
+void Mesh::add(VectorFx v) {
+    verticesArr.push_back(std::unique_ptr<VectorFx>(new VectorFx(v)));
 }
 

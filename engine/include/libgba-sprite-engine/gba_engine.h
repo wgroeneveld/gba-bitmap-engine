@@ -7,13 +7,19 @@
 
 
 #include <libgba-sprite-engine/gba/tonc_memmap.h>
-#include <libgba-sprite-engine/gba/tonc_memdef.h>
+#include <libgba-sprite-engine/gba/tonc_memmap.h>
+#include <libgba-sprite-engine/vectorfx.h>
+#include <libgba-sprite-engine/matrixfx.h>
 #include "scene.h"
 #include "sound_control.h"
 #include "timer.h"
 
 #define GBA_SCREEN_WIDTH 240
+#define GBA_SCREEN_WIDTH_FX GBA_SCREEN_WIDTH << 8
 #define GBA_SCREEN_HEIGHT 160
+#define GBA_SCREEN_HEIGHT_FX GBA_SCREEN_HEIGHT << 8
+
+
 #define M4_WIDTH 240
 
 const unsigned int black[VRAM_PAGE_SIZE] = {};
@@ -22,6 +28,7 @@ class GBAEngine {
 private:
     // WHY raw pointers? the engine does the transition and cleanup work itself
     Scene* currentScene;
+    Camera currentCamera;
     Scene* sceneToTransitionTo;
 
     u16* vid_page;
@@ -43,6 +50,7 @@ private:
     void render();
     void renderClear();
     inline void plotPixel(int x, int y, u8 clrId);
+    inline VectorFx project(VectorFx coord, MatrixFx transMat);
     void flipPage();
 
 public:

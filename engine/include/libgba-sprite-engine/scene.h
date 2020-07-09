@@ -8,6 +8,7 @@
 #include <vector>
 #include <memory>
 #include <functional>
+#include <libgba-sprite-engine/camera.h>
 #include <libgba-sprite-engine/mesh.h>
 #include <libgba-sprite-engine/palette/palette_manager.h>
 
@@ -25,6 +26,7 @@ public:
 
     // WHY raw pointers? they're unwrapped unique_ptrs managed by the scene implementation - will be cleaned up in engine
     virtual std::vector<Mesh*> meshes() = 0;
+    virtual Camera camera() = 0;
 
     virtual void load() = 0;
     virtual void tick(u16 keys) = 0;
