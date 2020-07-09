@@ -144,42 +144,6 @@ TEST_F(VectorFxSuite, ScaleAVector) {
     ASSERT_EQ(result.z(), 6);
 }
 
-uint grad2rad(uint grad) {
-    //return float2fx(grad*M_PI/180);
-    return fxdiv(fxmul(int2fx(grad), float2fx(M_PI)), int2fx(180));
-}
-
-TEST_F(VectorFxSuite, Rotate_FromBottomHalf_0_Degrees) {
-    auto bottomHalf = VectorFx::fromInt(120, 200, 0);
-    auto vector = VectorFx::fromInt(120, 80, 0);
-    auto result = vector.rotateAsCenter(bottomHalf, grad2rad(0)).toInt();
-    ASSERT_EQ(120, result.x());
-    ASSERT_EQ(200, result.y());
-}
-
-TEST_F(VectorFxSuite, Rotate_FromBottomHalf_90_Degrees) {
-    auto bottomHalf = VectorFx::fromInt(120, 200, 0);
-    auto vector = VectorFx::fromInt(120, 80, 0);
-    auto result = vector.rotateAsCenter(bottomHalf, grad2rad(90)).toInt();
-    ASSERT_EQ(240, result.x());
-    ASSERT_EQ(80, result.y());
-}
-
-TEST_F(VectorFxSuite, Rotate_FromBottomHalf_180_Degrees) {
-    auto bottomHalf = VectorFx::fromInt(120, 200, 0);
-    auto vector = VectorFx::fromInt(120, 80, 0);
-    auto result = vector.rotateAsCenter(bottomHalf, grad2rad(180)).toInt();
-    ASSERT_EQ(120, result.x());
-    ASSERT_EQ(-40, result.y());
-}
-
-TEST_F(VectorFxSuite, Rotate_FromBottomHalf_270_Degrees) {
-    auto bottomHalf = VectorFx::fromInt(120, 200, 0);
-    auto vector = VectorFx::fromInt(120, 80, 0);
-    auto result = vector.rotateAsCenter(bottomHalf, grad2rad(270)).toInt();
-    ASSERT_EQ(0, result.x());
-    ASSERT_EQ(80, result.y());
-}
 // ---- //
 
 TEST_F(VectorFxSuite, ToString) {

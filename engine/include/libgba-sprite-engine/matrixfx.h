@@ -97,7 +97,7 @@ public:
         m[15] = m44;
     }
 
-    inline static VectorFx transformCoordinates(VectorFx vector, MatrixFx transformation) {
+    inline static VectorFx transformCoordinates(const VectorFx &vector, const MatrixFx &transformation) {
         FIXED x = fxmul(vector.x(), transformation.mAt(0)) + fxmul(vector.y(), transformation.mAt(4)) + fxmul(vector.z(), transformation.mAt(8) + transformation.mAt(12));
         FIXED y = fxmul(vector.x(), transformation.mAt(1)) + fxmul(vector.y(), transformation.mAt(5)) + fxmul(vector.z(), transformation.mAt(9) + transformation.mAt(13));
         FIXED z = fxmul(vector.x(), transformation.mAt(2)) + fxmul(vector.y(), transformation.mAt(6)) + fxmul(vector.z(), transformation.mAt(10) + transformation.mAt(14));
@@ -126,7 +126,7 @@ public:
         return result;
     }
 
-    inline static MatrixFx lookAtLH(VectorFx eye, VectorFx target, VectorFx up) {
+    inline static MatrixFx lookAtLH(const VectorFx &eye, const VectorFx &target, const VectorFx &up) {
         auto zAxis = target - eye;
         zAxis.normalize();
         auto xAxis = VectorFx::cross(up, zAxis);
@@ -144,8 +144,8 @@ public:
         auto result = MatrixFx::zero();
         auto s = fxsin(angle);
         auto c = fxcos(angle);
-        result.m[0] = 1.0;
-        result.m[15] = 1.0;
+        result.m[0] = ONE;
+        result.m[15] = ONE;
         result.m[5] = c;
         result.m[10] = c;
         result.m[9] = -s;
@@ -157,8 +157,8 @@ public:
         auto result = MatrixFx::zero();
         auto s = fxsin(angle);
         auto c = fxcos(angle);
-        result.m[5] = 1.0;
-        result.m[15] = 1.0;
+        result.m[5] = ONE;
+        result.m[15] = ONE;
         result.m[0] = c;
         result.m[2] = -s;
         result.m[8] = s;
@@ -170,8 +170,8 @@ public:
         auto result = MatrixFx::zero();
         auto s = fxsin(angle);
         auto c = fxcos(angle);
-        result.m[10] = 1.0;
-        result.m[15] = 1.0;
+        result.m[10] = ONE;
+        result.m[15] = ONE;
         result.m[0] = c;
         result.m[1] = s;
         result.m[4] = -s;
@@ -179,7 +179,7 @@ public:
         return result;
     }
 
-    inline static MatrixFx translation(VectorFx vec) {
+    inline static MatrixFx translation(const VectorFx &vec) {
         auto result = MatrixFx::identity();
         result.m[12] = vec.x();
         result.m[13] = vec.y();

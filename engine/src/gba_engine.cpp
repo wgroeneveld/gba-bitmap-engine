@@ -118,6 +118,7 @@ GBAEngine::GBAEngine() {
 
     REG_SNDDSCNT = 0;
     vid_page = vid_mem_back;
+    projectionMatrix = MatrixFx::perspectiveFovLH(float2fx(0.78), fxdiv(GBA_SCREEN_WIDTH_FX, GBA_SCREEN_HEIGHT_FX), float2fx(0.01), ONE);
 }
 
 void GBAEngine::update() {
@@ -152,22 +153,19 @@ inline void GBAEngine::plotPixel(int x, int y, u8 clrId) {
     }
 }
 
-inline VectorFx GBAEngine::project(VectorFx coord, MatrixFx transMat) {
+inline VectorFx GBAEngine::project(const VectorFx &coord, const MatrixFx &transMat) {
     auto point = MatrixFx::transformCoordinates(coord, transMat);
 
-    auto x = fxmul(point.x(), GBA_SCREEN_WIDTH_FX) + fxdiv(GBA_SCREEN_WIDTH_FX, 2.0);
-    auto y = fxmul(-point.y(), GBA_SCREEN_HEIGHT_FX) + fxdiv(GBA_SCREEN_HEIGHT_FX, 2.0);
+    auto x = fxmul(point.x(), GBA_SCREEN_WIDTH_FX) + fxdiv(GBA_SCREEN_WIDTH_FX, TWO);
+    auto y = fxmul(-point.y(), GBA_SCREEN_HEIGHT_FX) + fxdiv(GBA_SCREEN_HEIGHT_FX, TWO);
     return VectorFx(x, y, 0);
 }
 
 // does the mesh rendering - to write mem before flipping
 void GBAEngine::render() {
     auto viewMatrix = MatrixFx::lookAtLH(currentCamera.getPosition(), currentCamera.getTarget(), VectorFx::up());
-    // TODO float fxes and other stuff out of render loop?
-    auto projectionMatrix = MatrixFx::perspectiveFovLH(float2fx(0.78), fxdiv(GBA_SCREEN_WIDTH_FX, GBA_SCREEN_HEIGHT_FX), float2fx(0.01), ONE);
 
     for(auto& mesh :currentScene->meshes()) {
-
         auto worldMatrix = MatrixFx::rotationYawPitchRoll(mesh->roty(), mesh->rotx(), mesh->rotz()) * MatrixFx::translation(mesh->position());
         auto transformMatrix = worldMatrix * viewMatrix * projectionMatrix;
 
@@ -176,6 +174,17 @@ void GBAEngine::render() {
             plotPixel(projectedPoint.x(), projectedPoint.y(), 1);
         }
     }
+
+    /*
+    plotPixel(150, 40, 1);
+    plotPixel(60, 40, 1);
+    plotPixel(150, 140, 1);
+    plotPixel(93, 26, 1);
+    plotPixel(93, 115, 1);
+    plotPixel(172, 115, 1);
+    plotPixel(60, 140, 1);
+    plotPixel(93, 26, 1);
+    */
 }
 
 void GBAEngine::renderClear() {

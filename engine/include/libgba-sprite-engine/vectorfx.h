@@ -36,7 +36,6 @@ public:
     }
 
     std::deque<VECTOR> bresenhamLineTo(VECTOR dest);
-    VectorFx rotateAsCenter(VectorFx point, FIXED angle);
 
     // WHY all these inlines? performance reasons.
     inline static VectorFx up() { return VectorFx::fromInt(0, 1, 0); }

@@ -19,6 +19,9 @@ SET(CMAKE_ASM_COMPILER gcc)
 SET(CMAKE_C_COMPILER gcc)
 SET(CMAKE_CXX_COMPILER g++)
 
+# remove -03 optimization flag otherwise debugging will be annoying as hell
+SET(CMAKE_CXX_FLAGS "-Wno-narrowing")
+
 add_definitions(-DCODE_COMPILED_AS_PART_OF_TEST)
 
 include_directories(${GTEST_LIBRARY}/include)
@@ -34,6 +37,7 @@ add_executable(unittest
         ../engine/src/palette/combined_palette.cpp
         ../engine/src/timer.cpp
         ../engine/src/math.cpp
+        ../engine/src/mesh.cpp
         ../engine/src/vectorfx.cpp
         timertest.cpp vectorfxtest.cpp matrixfxtest.cpp fixedpoinmathtest.cpp)
 

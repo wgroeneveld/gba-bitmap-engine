@@ -18,6 +18,7 @@
 
 extern FIXED HALF;
 extern FIXED ONE;
+extern FIXED TWO;
 
 #define FIX12_SHIFT 12
 #define FIX12_SCALE ( 1<<FIX12_SHIFT		)
@@ -69,18 +70,21 @@ INLINE FIXED fx12Tofx8(FIXED fx12) {
 }
 
 INLINE FIXED fxsin(FIXED fxrad) {
+    if(fxrad == 0) return 0;
     FIXED theta = fxrad2lut(fxrad);
     FIXED sin = lu_sin(theta);
     return fx12Tofx8(sin);
 }
 
 INLINE FIXED fxcos(FIXED fxrad) {
+    if(fxrad == 0) return ONE;
     FIXED theta = fxrad2lut(fxrad);
     FIXED cos = lu_cos(theta);
     return fx12Tofx8(cos);
 }
 
 INLINE FIXED fxtan(FIXED fxrad) {
+    if(fxrad == 0) return 0;
     FIXED theta = fxrad2lut(fxrad);
     FIXED sin = lu_sin(theta);
     FIXED cos = lu_cos(theta);

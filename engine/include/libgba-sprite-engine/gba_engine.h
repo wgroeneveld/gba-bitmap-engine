@@ -32,6 +32,7 @@ private:
     Scene* sceneToTransitionTo;
 
     u16* vid_page;
+    MatrixFx projectionMatrix;
 
     static std::unique_ptr<Timer> timer;
     static std::unique_ptr<SoundControl> activeChannelA;
@@ -50,7 +51,7 @@ private:
     void render();
     void renderClear();
     inline void plotPixel(int x, int y, u8 clrId);
-    inline VectorFx project(VectorFx coord, MatrixFx transMat);
+    inline VectorFx project(const VectorFx &coord, const MatrixFx &transMat);
     void flipPage();
 
 public:

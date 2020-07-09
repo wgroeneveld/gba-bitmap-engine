@@ -26,12 +26,17 @@ public:
     inline FIXED rotx() { return rot.x(); }
     inline FIXED roty() { return rot.y(); }
     inline FIXED rotz() { return rot.z(); }
+
+    inline void resetRotation() {
+        rot.setX(0);
+        rot.setY(0);
+    }
     inline void rotate(FIXED x, FIXED y) {
         rot.setX(rot.x() + x);
         rot.setY(rot.y() + y);
     }
 
-    explicit Mesh() {}
+    explicit Mesh() : pos(VectorFx()), rot(VectorFx()) {}
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
 };
