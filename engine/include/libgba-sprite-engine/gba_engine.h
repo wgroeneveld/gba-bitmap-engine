@@ -15,16 +15,8 @@
 #include "sound_control.h"
 #include "timer.h"
 
-#define GBA_SCREEN_WIDTH 240
-#define GBA_SCREEN_WIDTH_FX GBA_SCREEN_WIDTH << 8
-#define GBA_SCREEN_HEIGHT 160
-#define GBA_SCREEN_HEIGHT_FX GBA_SCREEN_HEIGHT << 8
-
-
-#define M4_WIDTH 240
 
 const unsigned int black[VRAM_PAGE_SIZE] = {};
-extern u16 *vid_page;
 
 class GBAEngine {
 private:
@@ -74,6 +66,7 @@ public:
         for(int i = 0; i < times; i++){}
     }
 
+    inline void plotPixel(int x, int y, u8 clrId);
     inline void plotPixel(const VectorPx &pixel, u8 clrId);
     inline void plotLine(const VectorPx &point0, const VectorPx &point1, u8 clrId);
 };

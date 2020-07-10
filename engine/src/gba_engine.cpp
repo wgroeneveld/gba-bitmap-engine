@@ -3,6 +3,7 @@
 //
 
 #include <libgba-sprite-engine/gba/tonc_memdef.h>
+#include <libgba-sprite-engine/gba/tonc_video.h>
 #include <libgba-sprite-engine/gba_engine.h>
 #include <cstring>
 #include <libgba-sprite-engine/gba/tonc_core.h>
@@ -145,41 +146,14 @@ void GBAEngine::flipPage() {
     REG_DISPCNT ^= DCNT_PAGE;
 }
 
-// http://www.coranac.com/tonc/text/bitmaps.htm
-// this thing is supposed to be very slow. see link above.
 inline void GBAEngine::plotPixel(const VectorPx &pixel, u8 clrId) {
-    u16 *dst = &vid_page[(pixel.y() * M4_WIDTH + pixel.x()) / 2];
-    if(pixel.x() & 1) {
-        *dst = (*dst & 0xFF) | (clrId << 8);
-    } else {
-        *dst = (*dst & ~0xFF) | clrId;
-    }
+    m4_plot(pixel.x(), pixel.y(), clrId);
 }
 
-// more or less 1-to-1:
-// https://www.davrous.com/2013/06/14/tutorial-part-2-learning-how-to-write-a-3d-soft-engine-from-scratch-in-c-ts-or-js-drawing-lines-triangles/
 inline void GBAEngine::plotLine(const VectorPx &point0, const VectorPx &point1, u8 clrId) {
-    int x0 = point0.x();
-    int y0 = point0.y();
-    int x1 = point1.x();
-    int y1 = point1.y();
-
-    int dx = ABS(x1 - x0);
-    int dy = ABS(y1 - y0);
-    int sx = (x0 < x1) ? 1 : -1;
-    int sy = (y0 < y1) ? 1 : -1;
-    int err = dx - dy;
-
-    while (true) {
-        plotPixel(VectorPx(x0, y0), clrId);
-
-        if ((x0 == x1) && (y0 == y1)) break;
-        auto e2 = 2 * err;
-        if (e2 > -dy) { err -= dy; x0 += sx; }
-        if (e2 < dx) { err += dx; y0 += sy; }
-    }
+    // uses tonc's optimalization tricks to get 10 FPS extra compared to standard bline algorithms
+    m4_line(point0.x(), point0.y(), point1.x(), point1.y(), clrId);
 }
-
 
 inline VectorPx GBAEngine::project(const VectorFx &coord, const MatrixFx &transMat) {
     auto point = MatrixFx::transformCoordinates(coord, transMat);

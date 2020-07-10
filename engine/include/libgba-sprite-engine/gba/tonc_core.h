@@ -148,58 +148,11 @@ INLINE void *toncset32(void *dst, u32 src, uint count);
 
 
 // Fast memcpy/set
-void memset16(void *dst, u16 hw, uint hwcount);
-void memcpy16(void *dst, const void* src, uint hwcount);
+extern "C" void memset16(void *dst, u16 hw, uint hwcount);
+extern "C" void memcpy16(void *dst, const void* src, uint hwcount);
 
-IWRAM_CODE void memset32(void *dst, u32 wd, uint wcount);
-IWRAM_CODE void memcpy32(void *dst, const void* src, uint wcount);
-
-
-//!	Fastfill for halfwords, analogous to memset()
-/*!	Uses <code>memset32()</code> if \a hwcount>5
-*	\param dst	Destination address.
-*	\param hw	Source halfword (not address).
-*	\param hwcount	Number of halfwords to fill.
-*	\note	\a dst <b>must</b> be halfword aligned.
-*	\note \a r0 returns as \a dst + \a hwcount*2.
-*/
-void memset16(void *dst, u16 hw, uint hwcount);
-
-//!	\brief Copy for halfwords.
-/*!	Uses <code>memcpy32()</code> if \a hwn>6 and 
-	  \a src and \a dst are aligned equally.
-	\param dst	Destination address.
-	\param src	Source address.
-	\param hwcount	 Number of halfwords to fill.
-	\note \a dst and \a src <b>must</b> be halfword aligned.
-	\note \a r0 and \a r1 return as 
-	  \a dst + \a hwcount*2 and \a src + \a hwcount*2.
-*/
-void memcpy16(void *dst, const void* src, uint hwcount);
-
-
-//!	Fast-fill by words, analogous to memset()
-/*! Like CpuFastSet(), only without the requirement of 
-	  32byte chunks and no awkward store-value-in-memory-first issue.
-	\param dst	Destination address.
-	\param wd	Fill word (not address).
-	\param wdcount	Number of words to fill.
-	\note	\a dst <b>must</b> be word aligned.
-	\note \a r0 returns as \a dst + \a wdcount*4.
-*/
-IWRAM_CODE void memset32(void *dst, u32 wd, uint wdcount);
-
-
-//!	\brief Fast-copy by words.
-/*! Like CpuFastFill(), only without the requirement of 32byte chunks
-	\param dst	Destination address.
-	\param src	Source address.
-	\param wdcount	Number of words.
-	\note	\a src and \a dst <b>must</b> be word aligned.
-	\note	\a r0 and \a r1 return as 
-	  \a dst + \a wdcount*4 and \a src + \a wdcount*4.
-*/
-IWRAM_CODE void memcpy32(void *dst, const void* src, uint wdcount);
+extern "C" IWRAM_CODE void memset32(void *dst, u32 wd, uint wcount);
+extern "C" IWRAM_CODE void memcpy32(void *dst, const void* src, uint wcount);
 
 //\}
 
