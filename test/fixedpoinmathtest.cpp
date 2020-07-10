@@ -40,6 +40,23 @@ TEST_F(FpSuite, LUTValueTests) {
     ASSERT_EQ(rnd(sinLutConv8), 0.995f);
 }
 
+TEST_F(FpSuite, SinLookupTests) {
+    int degrees = 360;
+    float radians = gr2rad(degrees);
+    std::cout << degrees << " in rad " << radians << std::endl;
+
+    float sinhalf = sin(radians);
+    ASSERT_FLOAT_EQ(rnd(sinhalf), 0.0049999999);
+
+    float sinlumax = fx2float(fx12Tofx8(lu_sin(SIN_LUT_MAX)));
+    ASSERT_FLOAT_EQ(rnd(sinlumax), 0.0049999999);
+
+    int scale = radians / (2*M_PI / 512);
+    FIXED theta = (scale << 6) * 2;
+    float sinlu = fx2float(fx12Tofx8(lu_sin(theta)));
+    ASSERT_FLOAT_EQ(rnd(sinlu), 0.0049999999);
+}
+
 TEST_F(FpSuite, TanFromFixedPointRadian) {
     // 20 degrees is 0.34906577777777775 rad
     // will be stored as .8f as input val

@@ -21,6 +21,7 @@ extern FIXED HALF;
 extern FIXED ONE;
 extern FIXED TWO;
 
+#define SIN_LUT_MAX ((512 << 6) * 2)            // 65536, FFFFh range
 #define FIX12_SHIFT 12
 #define FIX12_SCALE ( 1<<FIX12_SHIFT		)
 
@@ -53,7 +54,7 @@ INLINE float gr2rad(uint grad) {
 }
 
 INLINE FIXED gr2lut(uint grad) {
-    return 65535 / (360 / (grad % 360));
+    return SIN_LUT_MAX / (360 / (grad % 360));
 }
 
 INLINE FIXED rad2lut(float rad) {
@@ -61,8 +62,9 @@ INLINE FIXED rad2lut(float rad) {
 }
 
 INLINE FIXED fxrad2lut(FIXED rad) {
-    // TODO NOT good; too much divisions, but hey, fuck it
-    return rad2lut(fx2float(rad));
+    // TODO could be better without fx2float() ?
+    int scale = fx2float(rad) / (2*M_PI / 512);
+    return (scale << 6) * 2;
 }
 
 INLINE float fx12ToFloat(FIXED fx) {
