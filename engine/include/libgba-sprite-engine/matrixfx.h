@@ -21,11 +21,8 @@ class MatrixFx {
 private:
     FIXED m[MATRIX_DIMENSION];
 
-    inline std::string mstr(int index) {
-        char buffer[30];
-        snprintf(buffer, 30, "%4.3f", rnd(fx2float(m[index])));
-        std::string strObj4(buffer);
-        return strObj4;
+    inline std::string mstr(int index) const {
+        return fstr(m[index]);
     }
 
 public:
@@ -105,24 +102,24 @@ public:
         m[14] = m43;
         m[15] = m44;
     }
-    std::string to_string_m1() {
+    std::string to_string_m1() const {
         return "(" + mstr(0) + "," + mstr(1) + "," + mstr(2) + "," + mstr(3) +")";
     }
-    std::string to_string_m2() {
+    std::string to_string_m2() const {
         return "(" + mstr(4) + "," + mstr(5) + "," + mstr(6) + "," + mstr(7) +")";
     }
-    std::string to_string_m3() {
+    std::string to_string_m3() const {
         return "(" + mstr(8) + "," + mstr(9) + "," + mstr(10) + "," + mstr(11) +")";
     }
-    std::string to_string_m4() {
+    std::string to_string_m4() const {
         return "(" + mstr(12) + "," + mstr(13) + "," + mstr(14) + "," + mstr(15) +")";
     }
 
     inline static VectorFx transformCoordinates(const VectorFx &vector, const MatrixFx &transformation) {
-        FIXED x = fxmul(vector.x(), transformation.mAt(0)) + fxmul(vector.y(), transformation.mAt(4)) + fxmul(vector.z(), transformation.mAt(8) + transformation.mAt(12));
-        FIXED y = fxmul(vector.x(), transformation.mAt(1)) + fxmul(vector.y(), transformation.mAt(5)) + fxmul(vector.z(), transformation.mAt(9) + transformation.mAt(13));
-        FIXED z = fxmul(vector.x(), transformation.mAt(2)) + fxmul(vector.y(), transformation.mAt(6)) + fxmul(vector.z(), transformation.mAt(10) + transformation.mAt(14));
-        FIXED w = fxmul(vector.x(), transformation.mAt(3)) + fxmul(vector.y(), transformation.mAt(7)) + fxmul(vector.z(), transformation.mAt(11) + transformation.mAt(15));
+        FIXED x = fxmul(vector.x(), transformation.mAt(0)) + fxmul(vector.y(), transformation.mAt(4)) + fxmul(vector.z(), transformation.mAt(8)) + transformation.mAt(12);
+        FIXED y = fxmul(vector.x(), transformation.mAt(1)) + fxmul(vector.y(), transformation.mAt(5)) + fxmul(vector.z(), transformation.mAt(9)) + transformation.mAt(13);
+        FIXED z = fxmul(vector.x(), transformation.mAt(2)) + fxmul(vector.y(), transformation.mAt(6)) + fxmul(vector.z(), transformation.mAt(10)) + transformation.mAt(14);
+        FIXED w = fxmul(vector.x(), transformation.mAt(3)) + fxmul(vector.y(), transformation.mAt(7)) + fxmul(vector.z(), transformation.mAt(11)) + transformation.mAt(15);
         return VectorFx(fxdiv(x, w), fxdiv(y, w), fxdiv(z, w));
     }
 
@@ -209,7 +206,7 @@ public:
     }
 
     inline static MatrixFx rotationYawPitchRoll(FIXED yaw, FIXED pitch, FIXED roll) {
-        return MatrixFx::rotationZ(roll) * MatrixFx::rotationX(pitch) * MatrixFx::rotationY(yaw);
+        return (MatrixFx::rotationZ(roll) * MatrixFx::rotationX(pitch)) * MatrixFx::rotationY(yaw);
     }
 
     inline static MatrixFx perspectiveFovLH(FIXED fov, FIXED aspect, FIXED znear, FIXED zfar) {

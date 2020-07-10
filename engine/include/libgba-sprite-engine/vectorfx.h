@@ -10,6 +10,7 @@
 #include <string>
 #include <deque>
 #include <libgba-sprite-engine/gba/tonc_bios.h>
+#include <libgba-sprite-engine/math.h>
 
 #ifdef CODE_COMPILED_AS_PART_OF_TEST
     #include <libgba-sprite-engine/gba/tonc_math_stub.h>
@@ -21,6 +22,7 @@
 class VectorFx {
 private:
     VECTOR v;
+
 public:
     VectorFx() : v({}) {}
     VectorFx(const VectorFx& other) : v(other.v) {}
@@ -31,7 +33,7 @@ public:
         return VectorFx(int2fx(x), int2fx(y), int2fx(z));
     }
 
-    inline VectorFx toInt() {
+    inline VectorFx toInt() const {
         return VectorFx(fx2int(v.x), fx2int(v.y), fx2int(v.z));
     }
 
@@ -61,15 +63,15 @@ public:
     inline friend VectorFx operator/(const VectorFx &one, const VectorFx &two) {
         return VectorFx(fxdiv(one.v.x, two.v.x), fxdiv(one.v.y, two.v.y), fxdiv(one.v.z, two.v.z));
     }
-    inline FIXED length() {
+    inline FIXED length() const {
         FIXED toRoot = fxmul(v.x, v.x) + fxmul(v.y, v.y) + fxmul(v.z, v.z);
         // tonc's fx() methods are .8fx, and BIOS needs .16 (results are .8??)
         return Sqrt(toRoot << 8);
     }
-    inline VectorFx negate() {
+    inline VectorFx negate() const {
         return VectorFx(-v.x, -v.y, -v.z);
     }
-    inline VectorFx scale(int scale) {
+    inline VectorFx scale(int scale) const {
         FIXED fac = int2fx(scale);
         return VectorFx(fxmul(v.x, fac), fxmul(v.y, fac), fxmul(v.z, fac));
     }
@@ -94,11 +96,11 @@ public:
     inline float floatZ() const { return fx2float(v.z); }
     inline void setZ(FIXED z) { v.z = z; }
 
-    std::string to_string() {
+    std::string to_string() const {
         return "(" + std::to_string(v.x) + "," + std::to_string(v.y) + "," + std::to_string(v.z) + ")";
     }
-    std::string to_stringfl() {
-        return "(" + std::to_string(fx2float(v.x)) + "," + std::to_string(fx2float(v.y)) + "," + std::to_string(fx2float(v.z)) + ")";
+    std::string to_stringfl() const {
+        return "(" + fstr(v.x) + "," + fstr(v.y) + "," + fstr(v.z) + ")";
     }
 };
 

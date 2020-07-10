@@ -43,12 +43,12 @@ void WireScene::load() {
         SoftEngine.js:50 drawing 163,36
         SoftEngine.js:50 drawing 76,36
      */
+    //cube->rotateTo(int2fx(13), int2fx(13));
 }
 
 void WireScene::tick(u16 keys) {
+    cube->rotate(2, 2);
     if(keys & KEY_START || keys & KEY_A) {
-        cube->rotate(5, 5);
-    } else if(keys & KEY_B) {
         cube->resetRotation();
     }
 }

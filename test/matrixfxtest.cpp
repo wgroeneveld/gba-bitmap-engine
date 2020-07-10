@@ -43,10 +43,54 @@ TEST_F(MatrixFxSuite, RotationMatriches) {
     assertMatrix(expectedIdMatrix, result, "rotz");
 }
 
-TEST_F(MatrixFxSuite, RotationYawPitchRoll) {
+TEST_F(MatrixFxSuite, RotationYawPitchRoll_WithoutRotations) {
     auto expectedIdMatrix = MatrixFx(float2fx(1.0), 0, 0, 0, 0, float2fx(1.0), 0, 0, 0, 0, float2fx(1.0), 0, 0, 0, 0, float2fx(1.0));
     auto rotYwaPitchRoll = MatrixFx::rotationYawPitchRoll(0, 0, 0);
     assertMatrix(expectedIdMatrix, rotYwaPitchRoll, "rotywa");
+}
+
+TEST_F(MatrixFxSuite, RotationYawPitchRoll_WithRotations) {
+    auto expectedMatrix = MatrixFx::fromFloat(
+            0.9074467814501962, 0, -0.4201670368266409, 0,
+            0.17654033883567982, 0.9074467814501962, 0.38127922523980134, 0,
+            0.38127922523980134, -0.4201670368266409, 0.8234596611643201, 0,
+            0, 0, 0, 1);
+    auto rotYwaPitchRoll = MatrixFx::rotationYawPitchRoll(int2fx(13), int2fx(13), 0);
+
+    assertMatrix(expectedMatrix, rotYwaPitchRoll, "rotywa");
+}
+
+TEST_F(MatrixFxSuite, TransformCoordinates) {
+    // test data taken from Babylon, first coord of cube to be transformed with calculated transfomatrix
+    auto transformation = MatrixFx::fromFloat(
+        -1.6218433160440375,
+        0,
+        0,
+        0,
+        0,
+        2.4327649740660564,
+        0,
+        0,
+        0,
+        0,
+        -1.0101010101010102,
+        -1,
+        0,
+        0,
+        10.090909090909092,
+        10);
+
+    auto result = MatrixFx::transformCoordinates(VectorFx::fromInt(-1, 1, 1), transformation);
+    // expected result: Vector3 {x: 0.18020481289378196, y: 0.2703072193406729, z: 1.0089786756453423}
+    ASSERT_FLOAT_EQ(fx2float(result.x()), 0.1796875);
+    ASSERT_FLOAT_EQ(fx2float(result.y()), 0.26953125);
+    ASSERT_FLOAT_EQ(fx2float(result.z()), 1.0078125);
+
+    result = MatrixFx::transformCoordinates(VectorFx::fromInt(-1, -1, -1), transformation);
+    // expected result: Vector3 {x: 0.14744030145854886, y: -0.22116045218782332, z: 1.0091827364554637}
+    ASSERT_FLOAT_EQ(fx2float(result.x()), 0.14453125);
+    ASSERT_FLOAT_EQ(fx2float(result.y()), -0.21875);
+    ASSERT_FLOAT_EQ(fx2float(result.z()), 1.0078125);
 }
 
 TEST_F(MatrixFxSuite, MeshToTransformMatrix_IntegrationTest) {
@@ -83,25 +127,25 @@ TEST_F(MatrixFxSuite, MeshToTransformMatrix_IntegrationTest) {
 
     auto coord = *cube.vertices()[0].get();
     auto point = MatrixFx::transformCoordinates(coord, transformMatrix);
-    ASSERT_EQ(fx2float(point.x()), 0.125f);
-    ASSERT_EQ(fx2float(point.y()), 0.25f);
-    ASSERT_EQ(fx2float(point.z()), 1.00f);
+    ASSERT_FLOAT_EQ(fx2float(point.x()), 0);
+    ASSERT_FLOAT_EQ(fx2float(point.y()), 0);
+    ASSERT_FLOAT_EQ(fx2float(point.z()), 1.0039062);
 
     auto x = fxmul(point.x(), GBA_SCREEN_WIDTH_FX) + fxdiv(GBA_SCREEN_WIDTH_FX, int2fx(2));
     auto y = fxmul(-point.y(), GBA_SCREEN_HEIGHT_FX) + fxdiv(GBA_SCREEN_HEIGHT_FX, int2fx(2));
-    ASSERT_EQ(fx2float(x), 150);
-    ASSERT_EQ(fx2float(y), 40);
+    ASSERT_EQ(fx2float(x), 120);
+    ASSERT_EQ(fx2float(y), 80);
 
-    // dest in Babylon - dest according to for loop below (should print something roughly similar)
+    // dest in Babylon - dest according to for loop below - dest printed using TextStream (should print something roughly similar)
     /*
-     *  163, 36         - 150,40
-     *  76, 36          - 60,40
-     *  163, 123        - 150,140
-     *  155, 115        - 93,26
-     *  155, 44         - 93,115
-     *  84, 44          - 172,115
-     *  76, 123         - 60,140
-     *  84, 115         - 93,26
+     * 0  163, 36         - 150,40        - 165, 34
+     * 1  76, 36          - 60,40         - 75, 34
+     * 2  163, 123        - 150,140       - 165, 125
+     * 3  155, 115        - 93,26         - 75, 34    (same as 0)
+     * 4  155, 44         - 93,115        - 75, 125
+     * 5  84, 44          - 172,115       - 165, 125  (same as 2)
+     * 6  76, 123         - 60,140        - 75, 125   (same as 4)
+     * 7  84, 115         - 93,26         - 165, 34   (same as 0)
      *
      */
     for(auto& vertex : cube.vertices()) {

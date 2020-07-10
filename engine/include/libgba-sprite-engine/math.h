@@ -13,6 +13,7 @@
     #endif
 
 #include <cmath>
+#include <string>
 
 // fixed point math things that were missing from TONC
 
@@ -34,10 +35,17 @@ INLINE FIXED fxtan(FIXED fxrad);
 INLINE FIXED fxsin(FIXED fxrad);
 INLINE FIXED fxcos(FIXED fxrad);
 INLINE float rnd(float val);
+INLINE std::string fstr(FIXED which);
 
 // ---- impl
 INLINE float rnd(float val) {
     return (float) ((std::floor(val * 100) + .5) / 100);
+}
+INLINE std::string fstr(FIXED which) {
+    char buffer[30];
+    snprintf(buffer, 30, "%4.3f", rnd(fx2float(which)));
+    std::string strObj4(buffer);
+    return strObj4;
 }
 
 INLINE float gr2rad(uint grad) {
@@ -45,7 +53,7 @@ INLINE float gr2rad(uint grad) {
 }
 
 INLINE FIXED gr2lut(uint grad) {
-    return 65535 / (360 / grad);
+    return 65535 / (360 / (grad % 360));
 }
 
 INLINE FIXED rad2lut(float rad) {

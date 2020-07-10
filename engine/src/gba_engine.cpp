@@ -156,6 +156,8 @@ inline void GBAEngine::plotPixel(int x, int y, u8 clrId) {
     }
 }
 
+int i = 0;
+
 inline VectorFx GBAEngine::project(const VectorFx &coord, const MatrixFx &transMat) {
     auto point = MatrixFx::transformCoordinates(coord, transMat);
 
@@ -172,32 +174,13 @@ void GBAEngine::render() {
         auto worldMatrix = MatrixFx::rotationYawPitchRoll(mesh->roty(), mesh->rotx(), mesh->rotz()) * MatrixFx::translation(mesh->position());
         auto transformMatrix = worldMatrix * viewMatrix * projectionMatrix;
 
-        TextStream::instance().setText(transformMatrix.to_string_m1(), 1, 1);
-        TextStream::instance().setText(transformMatrix.to_string_m2(), 2, 1);
-        TextStream::instance().setText(transformMatrix.to_string_m3(), 3, 1);
-        TextStream::instance().setText(transformMatrix.to_string_m4(), 4, 1);
+        TextStream::instance().setText("rot: " + mesh->rotation().to_stringfl(), 1, 1);
 
-        int i = 0;
         for(auto& vertex : mesh->vertices()) {
             auto projectedPoint = project(*vertex.get(), transformMatrix).toInt();
             plotPixel(projectedPoint.x(), projectedPoint.y(), 1);
-
-            //TextStream::instance().setText(std::to_string(i) + ":" + projectedPoint.to_string(), i, 1);
-            i++;
         }
     }
-
-    /*
-     * according to the unit tests; it should do something like this:
-    plotPixel(150, 40, 1);
-    plotPixel(60, 40, 1);
-    plotPixel(150, 140, 1);
-    plotPixel(93, 26, 1);
-    plotPixel(93, 115, 1);
-    plotPixel(172, 115, 1);
-    plotPixel(60, 140, 1);
-    plotPixel(93, 26, 1);
-    */
 }
 
 void GBAEngine::renderClear() {
