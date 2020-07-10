@@ -31,10 +31,10 @@ public:
     std::string to_string();
 
     int getTotalMsecs();
-    int getMsecs() { return msecs; }
-    int getSecs() { return secs; }
-    int getMinutes() { return minutes; }
-    int getHours() { return hours; }
+    inline int getMsecs() { return msecs; }
+    inline int getSecs() { return secs; }
+    inline int getMinutes() { return minutes; }
+    inline int getHours() { return hours; }
 
     friend std::ostream& operator<<(std::ostream& os, Timer& timer);
 };

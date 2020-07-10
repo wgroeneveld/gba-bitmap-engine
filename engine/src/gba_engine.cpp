@@ -130,12 +130,11 @@ void GBAEngine::update() {
     // WARNING - keep amount of instructions as minimal as possible in here!
 
     u16 keys = readKeys();
-    // main scene update loop call. This *might* take a while.
-    currentScene->tick(keys);
 
     // TODO use software interrupt Vsyncing instead of 2 wasteful whiles
     vsync();
     renderClear();
+    currentScene->tick(keys);
     render();
     flipPage();
 }
