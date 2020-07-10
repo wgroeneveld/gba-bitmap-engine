@@ -32,23 +32,32 @@ void WireScene::load() {
     cube->add(VectorFx::fromInt(1, 1, -1));
     cube->add(VectorFx::fromInt(1, -1, 1));
     cube->add(VectorFx::fromInt(1, -1, -1));
-    /*
-     * should be translated, with camera 0,0,10, and with GBA dimensions, to:
-        SoftEngine.js:50 drawing 163,123
-        SoftEngine.js:50 drawing 155,115
-        SoftEngine.js:50 drawing 155,44
-        SoftEngine.js:50 drawing 84,44
-        SoftEngine.js:50 drawing 76,123
-        SoftEngine.js:50 drawing 84,115
-        SoftEngine.js:50 drawing 163,36
-        SoftEngine.js:50 drawing 76,36
-     */
-    //cube->rotateTo(int2fx(13), int2fx(13));
+
+    cube->addFace({ 0, 1, 2});
+    cube->addFace({ 1, 2, 3});
+    cube->addFace({ 1, 3, 6});
+    cube->addFace({ 1, 5, 6});
+    cube->addFace({ 0, 1, 4});
+    cube->addFace({ 1, 4, 5});
+
+    cube->addFace({ 2, 3, 7});
+    cube->addFace({ 3, 6, 7});
+    cube->addFace({ 0, 2, 7});
+    cube->addFace({ 0, 4, 7});
+    cube->addFace({ 4, 5, 6});
+    cube->addFace({ 4, 6, 7});
 }
 
 void WireScene::tick(u16 keys) {
     cube->rotate(2, 2);
-    if(keys & KEY_START || keys & KEY_A) {
+
+    if(keys & KEY_A) {
         cube->resetRotation();
+    } else if(keys & KEY_B) {
+        if(cube->isWired()) {
+            cube->unwire();
+        } else {
+            cube->wire();
+        }
     }
 }

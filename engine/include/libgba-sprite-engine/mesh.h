@@ -9,23 +9,41 @@
 #include <vector>
 #include <memory>
 
+typedef struct {
+    int a;
+    int b;
+    int c;
+} Face;
+
 class Mesh {
 private:
     VectorFx pos;
     VectorFx rot;
+    u8 cIndex;
+    bool wired;
 
     std::vector<std::unique_ptr<VectorFx>> verticesArr;
+    std::vector<Face> facesArr;
 
 public:
 
     void add(VectorFx v);
+    void addFace(Face f);
     inline std::vector<std::unique_ptr<VectorFx>> const& vertices() const {
         return verticesArr;
+    }
+
+    inline std::vector<Face> const& faces() const {
+        return facesArr;
     }
 
     inline VectorFx &position() { return pos; }
     inline VectorFx &rotation() { return rot; }
 
+    inline void wire() { wired = true; }
+    inline void unwire() { wired = false; }
+    inline bool isWired() const { return wired; }
+    inline u8 colorIndex() const { return cIndex; }
     inline FIXED rotx() const { return rot.x(); }
     inline FIXED roty() const { return rot.y(); }
     inline FIXED rotz() const { return rot.z(); }
@@ -43,7 +61,7 @@ public:
         rot.setY(rot.y() + y);
     }
 
-    explicit Mesh() : pos(VectorFx()), rot(VectorFx()) {}
+    explicit Mesh() : pos(VectorFx()), rot(VectorFx()), cIndex(1), wired(true) {}
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
 };

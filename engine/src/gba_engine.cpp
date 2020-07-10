@@ -8,6 +8,7 @@
 #include <libgba-sprite-engine/gba/tonc_core.h>
 #include <libgba-sprite-engine/matrixfx.h>
 #include <libgba-sprite-engine/background/text_stream.h>
+#include <libgba-sprite-engine/mesh.h>
 
 std::unique_ptr<SoundControl> GBAEngine::activeChannelA;
 std::unique_ptr<SoundControl> GBAEngine::activeChannelB;
@@ -147,23 +148,46 @@ void GBAEngine::flipPage() {
 
 // http://www.coranac.com/tonc/text/bitmaps.htm
 // this thing is supposed to be very slow. see link above.
-inline void GBAEngine::plotPixel(int x, int y, u8 clrId) {
-    u16 *dst = &vid_page[(y * M4_WIDTH + x) / 2];
-    if(x & 1) {
+inline void GBAEngine::plotPixel(const VectorPx &pixel, u8 clrId) {
+    u16 *dst = &vid_page[(pixel.y() * M4_WIDTH + pixel.x()) / 2];
+    if(pixel.x() & 1) {
         *dst = (*dst & 0xFF) | (clrId << 8);
     } else {
         *dst = (*dst & ~0xFF) | clrId;
     }
 }
 
-int i = 0;
+// more or less 1-to-1:
+// https://www.davrous.com/2013/06/14/tutorial-part-2-learning-how-to-write-a-3d-soft-engine-from-scratch-in-c-ts-or-js-drawing-lines-triangles/
+inline void GBAEngine::plotLine(const VectorPx &point0, const VectorPx &point1, u8 clrId) {
+    int x0 = point0.x();
+    int y0 = point0.y();
+    int x1 = point1.x();
+    int y1 = point1.y();
 
-inline VectorFx GBAEngine::project(const VectorFx &coord, const MatrixFx &transMat) {
+    int dx = ABS(x1 - x0);
+    int dy = ABS(y1 - y0);
+    int sx = (x0 < x1) ? 1 : -1;
+    int sy = (y0 < y1) ? 1 : -1;
+    int err = dx - dy;
+
+    while (true) {
+        plotPixel(VectorPx(x0, y0), clrId);
+
+        if ((x0 == x1) && (y0 == y1)) break;
+        auto e2 = 2 * err;
+        if (e2 > -dy) { err -= dy; x0 += sx; }
+        if (e2 < dx) { err += dx; y0 += sy; }
+    }
+}
+
+
+inline VectorPx GBAEngine::project(const VectorFx &coord, const MatrixFx &transMat) {
     auto point = MatrixFx::transformCoordinates(coord, transMat);
 
     auto x = fxmul(point.x(), GBA_SCREEN_WIDTH_FX) + fxdiv(GBA_SCREEN_WIDTH_FX, TWO);
     auto y = fxmul(-point.y(), GBA_SCREEN_HEIGHT_FX) + fxdiv(GBA_SCREEN_HEIGHT_FX, TWO);
-    return VectorFx(x, y, 0);
+    return VectorPx::fromFx(x, y);
 }
 
 // does the mesh rendering - to write mem before flipping
@@ -174,11 +198,27 @@ void GBAEngine::render() {
         auto worldMatrix = MatrixFx::rotationYawPitchRoll(mesh->roty(), mesh->rotx(), mesh->rotz()) * MatrixFx::translation(mesh->position());
         auto transformMatrix = worldMatrix * viewMatrix * projectionMatrix;
 
-        TextStream::instance().setText("rot: " + mesh->rotation().to_stringfl(), 1, 1);
+        if(mesh->isWired()) {
+            // triangular faces wireframes
+            for(auto& face : mesh->faces()) {
+                auto& vertexA = mesh->vertices()[face.a];
+                auto& vertexB = mesh->vertices()[face.b];
+                auto& vertexC = mesh->vertices()[face.c];
 
-        for(auto& vertex : mesh->vertices()) {
-            auto projectedPoint = project(*vertex.get(), transformMatrix).toInt();
-            plotPixel(projectedPoint.x(), projectedPoint.y(), 1);
+                auto pixelA = project(*vertexA.get(), transformMatrix);
+                auto pixelB = project(*vertexB.get(), transformMatrix);
+                auto pixelC = project(*vertexC.get(), transformMatrix);
+
+                plotLine(pixelA, pixelB, mesh->colorIndex());
+                plotLine(pixelB, pixelC, mesh->colorIndex());
+                plotLine(pixelC, pixelA, mesh->colorIndex());
+            }
+        } else {
+            // pixel-only
+            for (auto &vertex : mesh->vertices()) {
+                auto projectedPoint = project(*vertex.get(), transformMatrix);
+                plotPixel(projectedPoint, mesh->colorIndex());
+            }
         }
     }
 }

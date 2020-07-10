@@ -9,6 +9,7 @@
 #include <libgba-sprite-engine/gba/tonc_memmap.h>
 #include <libgba-sprite-engine/gba/tonc_memmap.h>
 #include <libgba-sprite-engine/vectorfx.h>
+#include <libgba-sprite-engine/vectorpx.h>
 #include <libgba-sprite-engine/matrixfx.h>
 #include "scene.h"
 #include "sound_control.h"
@@ -50,8 +51,7 @@ private:
 
     void render();
     void renderClear();
-    inline void plotPixel(int x, int y, u8 clrId);
-    inline VectorFx project(const VectorFx &coord, const MatrixFx &transMat);
+    inline VectorPx project(const VectorFx &coord, const MatrixFx &transMat);
     void flipPage();
 
 public:
@@ -70,9 +70,12 @@ public:
 
     u16 readKeys();
     void update();
-    void delay(int times) {
+    inline void delay(int times) {
         for(int i = 0; i < times; i++){}
     }
+
+    inline void plotPixel(const VectorPx &pixel, u8 clrId);
+    inline void plotLine(const VectorPx &point0, const VectorPx &point1, u8 clrId);
 };
 
 
