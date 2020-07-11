@@ -35,5 +35,5 @@ void MonkeyScene::tick(u16 keys) {
 
     TextStream::instance().setText(std::to_string(fps < 0 ? 0 : fps) + std::string(" FPS"), 1, 1);
 
-    monkey->rotate(2, 2);
+    monkey->rotate(10, 10);
 }

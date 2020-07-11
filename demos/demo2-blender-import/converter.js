@@ -26,6 +26,7 @@ function done() {
         "}\n"
 }
 
+// partially reverse-engineered https://david.blob.core.windows.net/softengine3d/part3/index.html
 for(var meshIndex = 0; meshIndex < jsonObject.meshes.length; meshIndex++) {
     var verticesArray = jsonObject.meshes[meshIndex].vertices;
     var indicesArray = jsonObject.meshes[meshIndex].indices;
