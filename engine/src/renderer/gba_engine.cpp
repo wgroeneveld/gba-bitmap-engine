@@ -4,7 +4,7 @@
 
 #include <libgba-sprite-engine/gba/tonc_memdef.h>
 #include <libgba-sprite-engine/gba/tonc_video.h>
-#include <libgba-sprite-engine/gba_engine.h>
+#include <libgba-sprite-engine/renderer/gba_engine.h>
 #include <cstring>
 #include <libgba-sprite-engine/gba/tonc_core.h>
 #include <libgba-sprite-engine/matrixfx.h>
@@ -16,6 +16,7 @@ std::unique_ptr<SoundControl> GBAEngine::activeChannelB;
 std::unique_ptr<Timer> GBAEngine::timer;
 
 u16 *vid_page;
+int msecs = 1;
 
 void GBAEngine::vsync() {
     while (REG_VCOUNT >= 160);
@@ -124,6 +125,7 @@ GBAEngine::GBAEngine() {
     REG_SNDDSCNT = 0;
     vid_page = vid_mem_back;
     projectionMatrix = MatrixFx::perspectiveFovLH(float2fx(0.78), fxdiv(GBA_SCREEN_WIDTH_FX, GBA_SCREEN_HEIGHT_FX), float2fx(0.01), ONE);
+    showfps = true;
 }
 
 void GBAEngine::update() {
@@ -135,9 +137,23 @@ void GBAEngine::update() {
     // TODO use software interrupt Vsyncing instead of 2 wasteful whiles
     vsync();
     renderClear();
+
+    if(showfps) {
+        showFPS();
+    }
+
     currentScene->tick(keys);
     render();
     flipPage();
+}
+
+void GBAEngine::showFPS() {
+    int curmsecs = getTimer()->getMsecs();
+    int elapsed = curmsecs - msecs;
+    int fps = 1000 / elapsed;
+    msecs = curmsecs;
+
+    TextStream::instance().setText(std::to_string(fps > 0 ? fps : 0) + std::string(" FPS"), 1, 1);
 }
 
 void GBAEngine::flipPage() {
@@ -146,16 +162,16 @@ void GBAEngine::flipPage() {
     REG_DISPCNT ^= DCNT_PAGE;
 }
 
-inline void GBAEngine::plotPixel(const VectorPx &pixel, u8 clrId) {
+void GBAEngine::plotPixel(const VectorPx &pixel, u8 clrId) {
     m4_plot(pixel.x(), pixel.y(), clrId);
 }
 
-inline void GBAEngine::plotLine(const VectorPx &point0, const VectorPx &point1, u8 clrId) {
+void GBAEngine::plotLine(const VectorPx &point0, const VectorPx &point1, u8 clrId) {
     // uses tonc's optimalization tricks to get 10 FPS extra compared to standard bline algorithms
     m4_line(point0.x(), point0.y(), point1.x(), point1.y(), clrId);
 }
 
-inline VectorPx GBAEngine::project(const VectorFx &coord, const MatrixFx &transMat) {
+VectorPx GBAEngine::project(const VectorFx &coord, const MatrixFx &transMat) {
     auto point = MatrixFx::transformCoordinates(coord, transMat);
 
     auto x = fxmul(point.x(), GBA_SCREEN_WIDTH_FX) + fxdiv(GBA_SCREEN_WIDTH_FX, TWO);
@@ -171,28 +187,7 @@ void GBAEngine::render() {
         auto worldMatrix = MatrixFx::rotationYawPitchRoll(mesh->roty(), mesh->rotx(), mesh->rotz()) * MatrixFx::translation(mesh->position());
         auto transformMatrix = worldMatrix * viewMatrix * projectionMatrix;
 
-        if(mesh->isWired()) {
-            // triangular faces wireframes
-            for(auto& face : mesh->faces()) {
-                auto& vertexA = mesh->vertices()[face.a];
-                auto& vertexB = mesh->vertices()[face.b];
-                auto& vertexC = mesh->vertices()[face.c];
-
-                auto pixelA = project(*vertexA.get(), transformMatrix);
-                auto pixelB = project(*vertexB.get(), transformMatrix);
-                auto pixelC = project(*vertexC.get(), transformMatrix);
-
-                plotLine(pixelA, pixelB, mesh->colorIndex());
-                plotLine(pixelB, pixelC, mesh->colorIndex());
-                plotLine(pixelC, pixelA, mesh->colorIndex());
-            }
-        } else {
-            // pixel-only
-            for (auto &vertex : mesh->vertices()) {
-                auto projectedPoint = project(*vertex.get(), transformMatrix);
-                plotPixel(projectedPoint, mesh->colorIndex());
-            }
-        }
+        renderer->render(transformMatrix, mesh);
     }
 }
 
@@ -212,6 +207,7 @@ void GBAEngine::setScene(Scene* scene) {
         cleanupPreviousScene();
     }
     scene->load();
+    getTimer()->start();
 
     auto fgPalette = scene->getForegroundPalette();
     fgPalette->persist();

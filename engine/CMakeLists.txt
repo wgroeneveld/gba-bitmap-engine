@@ -19,7 +19,9 @@ add_library(${PROJECT_NAME}
         src/gba/tonc_bios.s
         src/gba/tonc_bmp8.cpp
         src/background/tonc_font.s
-        src/gba_engine.cpp
+        src/renderer/gba_engine.cpp
+        src/renderer/pixelrenderer.cpp
+        src/renderer/wirerenderer.cpp
         src/math.cpp
         src/sound_control.cpp src/scene.cpp src/timer.cpp src/vectorfx.cpp src/mesh.cpp)
 

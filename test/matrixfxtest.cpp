@@ -8,7 +8,7 @@
 #include <libgba-sprite-engine/math.h>
 #include <libgba-sprite-engine/mesh.h>
 #include <libgba-sprite-engine/camera.h>
-#include <libgba-sprite-engine/gba_engine.h>
+#include <libgba-sprite-engine/renderer/gba_engine.h>
 
 class MatrixFxSuite : public ::testing::Test {
 protected:

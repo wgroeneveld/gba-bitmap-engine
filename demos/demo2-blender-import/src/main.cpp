@@ -3,13 +3,14 @@
 //
 
 #include <libgba-sprite-engine/scene.h>
-#include <libgba-sprite-engine/gba_engine.h>
+#include <libgba-sprite-engine/renderer/gba_engine.h>
 #include <libgba-sprite-engine/palette/palette_manager.h>
 
 #include "monkey.h"
 
 int main() {
     std::shared_ptr<GBAEngine> engine(new GBAEngine());
+    engine.get()->setRenderer(new WiredRenderer());
 
     MonkeyScene* startScene = new MonkeyScene(engine);
     engine->setScene(startScene);

@@ -3,7 +3,7 @@
 //
 
 #include <libgba-sprite-engine/gba/tonc_memdef.h>
-#include <libgba-sprite-engine/gba_engine.h>
+#include <libgba-sprite-engine/renderer/gba_engine.h>
 #include <libgba-sprite-engine/background/text_stream.h>
 #include "wirescene.h"
 
@@ -20,7 +20,6 @@ Camera WireScene::camera() {
     return Camera(VectorFx::fromInt(0, 0, 10), VectorFx::fromInt(0, 0, 0));
 }
 
-int msecs = 1;
 void WireScene::load() {
     foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager());
     backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(pal, sizeof(pal)));
@@ -48,26 +47,20 @@ void WireScene::load() {
     cube->addFace({ 0, 4, 7});
     cube->addFace({ 4, 5, 6});
     cube->addFace({ 4, 6, 7});
-
-    engine->getTimer()->start();
 }
 
+bool wired = true;
 void WireScene::tick(u16 keys) {
-    int curmsecs = engine->getTimer()->getMsecs();
-    int elapsed = curmsecs - msecs;
-    msecs = curmsecs;
-
-    TextStream::instance().setText(std::to_string(1000 / elapsed) + std::string(" FPS"), 1, 1);
-
     cube->rotate(2, 2);
 
     if(keys & KEY_A) {
         cube->resetRotation();
     } else if(keys & KEY_B) {
-        if(cube->isWired()) {
-            cube->unwire();
+        wired = !wired;
+        if(wired) {
+            engine->setRenderer(new WiredRenderer());
         } else {
-            cube->wire();
+            engine->setRenderer(new PixelRenderer());
         }
     }
 }

@@ -8,7 +8,7 @@
 #include <libgba-sprite-engine/scene.h>
 #include <libgba-sprite-engine/mesh.h>
 #include <libgba-sprite-engine/camera.h>
-#include <libgba-sprite-engine/gba_engine.h>
+#include <libgba-sprite-engine/renderer/gba_engine.h>
 #include <memory>
 
 // forward declaration of generated mesh.cpp file

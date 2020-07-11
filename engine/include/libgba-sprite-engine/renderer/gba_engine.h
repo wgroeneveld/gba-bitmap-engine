@@ -11,9 +11,10 @@
 #include <libgba-sprite-engine/vectorfx.h>
 #include <libgba-sprite-engine/vectorpx.h>
 #include <libgba-sprite-engine/matrixfx.h>
-#include "scene.h"
-#include "sound_control.h"
-#include "timer.h"
+#include <libgba-sprite-engine/renderer/renderer.h>
+#include "libgba-sprite-engine/scene.h"
+#include "libgba-sprite-engine/sound_control.h"
+#include "libgba-sprite-engine/timer.h"
 
 
 const unsigned int black[VRAM_PAGE_SIZE] = {};
@@ -25,7 +26,10 @@ private:
     Camera currentCamera;
     Scene* sceneToTransitionTo;
 
+    bool showfps;
+    void showFPS();
     MatrixFx projectionMatrix;
+    std::unique_ptr<Renderer> renderer;
 
     static std::unique_ptr<Timer> timer;
     static std::unique_ptr<SoundControl> activeChannelA;
@@ -43,7 +47,6 @@ private:
 
     void render();
     void renderClear();
-    inline VectorPx project(const VectorFx &coord, const MatrixFx &transMat);
     void flipPage();
 
 public:
@@ -66,9 +69,12 @@ public:
         for(int i = 0; i < times; i++){}
     }
 
-    inline void plotPixel(int x, int y, u8 clrId);
-    inline void plotPixel(const VectorPx &pixel, u8 clrId);
-    inline void plotLine(const VectorPx &point0, const VectorPx &point1, u8 clrId);
+    void setRenderer(Renderer* r) { renderer = std::unique_ptr<Renderer>(r); };
+
+    VectorPx project(const VectorFx &coord, const MatrixFx &transMat);
+    void plotPixel(int x, int y, u8 clrId);
+    void plotPixel(const VectorPx &pixel, u8 clrId);
+    void plotLine(const VectorPx &point0, const VectorPx &point1, u8 clrId);
 };
 
 

@@ -20,7 +20,6 @@ private:
     VectorFx pos;
     VectorFx rot;
     u8 cIndex;
-    bool wired;
 
     std::vector<std::unique_ptr<VectorFx>> verticesArr;
     std::vector<Face> facesArr;
@@ -41,9 +40,6 @@ public:
     inline VectorFx &position() { return pos; }
     inline VectorFx &rotation() { return rot; }
 
-    inline void wire() { wired = true; }
-    inline void unwire() { wired = false; }
-    inline bool isWired() const { return wired; }
     inline u8 colorIndex() const { return cIndex; }
     inline FIXED rotx() const { return rot.x(); }
     inline FIXED roty() const { return rot.y(); }
@@ -62,7 +58,7 @@ public:
         rot.setY(rot.y() + y);
     }
 
-    explicit Mesh() : pos(VectorFx()), rot(VectorFx()), cIndex(1), wired(true) {}
+    explicit Mesh() : pos(VectorFx()), rot(VectorFx()), cIndex(1) {}
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
 };
