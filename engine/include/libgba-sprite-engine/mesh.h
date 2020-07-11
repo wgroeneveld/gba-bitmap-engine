@@ -37,6 +37,7 @@ public:
         return facesArr;
     }
 
+    void setPosition(VectorFx position) { pos = position; }
     inline VectorFx &position() { return pos; }
     inline VectorFx &rotation() { return rot; }
 

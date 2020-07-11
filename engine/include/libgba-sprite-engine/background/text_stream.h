@@ -8,6 +8,8 @@
 #include <string>
 #include <memory>
 
+#include <libgba-sprite-engine/gba/tonc_types.h>
+
 #define TEXT_WIDTH 8
 
 // tonc_text.h assemly ref
