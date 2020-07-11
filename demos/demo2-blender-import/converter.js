@@ -9,7 +9,7 @@ var result =
 
 var meshes = 0;
 function addMesh(x, y, z) {
-    result += `\t obj->add(VectorFx::fromInt(${x}, ${y}, ${z}));\n`;
+    result += `\t obj->add(VectorFx::fromFloat(${x}, ${y}, ${z}));\n`;
     meshes++;
 }
 var faces = 0;

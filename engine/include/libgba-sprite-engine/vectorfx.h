@@ -33,6 +33,10 @@ public:
         return VectorFx(int2fx(x), int2fx(y), int2fx(z));
     }
 
+    static VectorFx fromFloat(float x, float y, float z) {
+        return VectorFx(float2fx(x), float2fx(y), float2fx(z));
+    }
+
     inline VectorFx toInt() const {
         return VectorFx(fx2int(v.x), fx2int(v.y), fx2int(v.z));
     }

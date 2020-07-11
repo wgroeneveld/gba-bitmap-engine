@@ -31,8 +31,9 @@ void MonkeyScene::tick(u16 keys) {
     int curmsecs = engine->getTimer()->getMsecs();
     int elapsed = curmsecs - msecs;
     msecs = curmsecs;
+    int fps = 1000 / elapsed;
 
-    TextStream::instance().setText(std::to_string(1000 / elapsed) + std::string(" FPS"), 1, 1);
+    TextStream::instance().setText(std::to_string(fps < 0 ? 0 : fps) + std::string(" FPS"), 1, 1);
 
     monkey->rotate(2, 2);
 }
