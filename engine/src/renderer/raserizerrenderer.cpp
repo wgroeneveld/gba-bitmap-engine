@@ -66,6 +66,7 @@ void RasterizerRenderer::plotTriangle(const VectorFx& pt1, const VectorFx& pt2, 
 
 void RasterizerRenderer::render(const MatrixFx &transformationMatrix, const Mesh *mesh) {
     bool colorSwitch = false;
+    int i = 0;
     for (auto &face : mesh->faces()) {
         auto &vertexA = mesh->vertices()[face.a];
         auto &vertexB = mesh->vertices()[face.b];
@@ -75,8 +76,9 @@ void RasterizerRenderer::render(const MatrixFx &transformationMatrix, const Mesh
         auto pixelB = engine->project(*vertexB.get(), transformationMatrix);
         auto pixelC = engine->project(*vertexC.get(), transformationMatrix);
 
-        plotTriangle(pixelA, pixelB, pixelC, colorSwitch ? 2 : 1);
+        COLOR cI = ONE + fxmul(fxdiv(int2fx(i), int2fx(mesh->faces().size())), int2fx(250));
+        plotTriangle(pixelA, pixelB, pixelC, fx2int(cI));
         colorSwitch = !colorSwitch;
+        i++;
     }
-
 }

@@ -6,9 +6,11 @@ This is (very) loosely based on David's 3D soft engine in C#/JS: https://www.dav
 
 Engine blueprint: a stripped-down version of [https://github.com/wgroeneveld/gba-sprite-engine/](https://github.com/wgroeneveld/gba-sprite-engine/) combined with more _tonc_ library functions. 
 
-#### Show me the money
+### Show me the money!
 
-Sure thing. **Demo 1**: without wires
+Sure thing. 
+
+#### **Demo 1**: without wires
 
 ![design](https://github.com/wgroeneveld/gba-bitmap-engine/blob/master/img/wireless.gif?raw=true)
 
@@ -17,7 +19,7 @@ You 'should' see a cube forming based on 8 vertices. It's a simple example to sh
 
 60 FPS. Yay.
 
-**Demo 1b**: with wires
+#### **Demo 1b**: with wires
 
 ![design](https://github.com/wgroeneveld/gba-bitmap-engine/blob/master/img/wired.gif?raw=true)
 
@@ -28,7 +30,11 @@ MODE4's weird byte write problems are causing trouble. Time to consult _tonc_ an
 
 30 FPS, winning 10 frames using `bmp8_line()`.
 
-**Demo 2**: load actual vertex content from Blender/Babylon based on [this](https://david.blob.core.windows.net/softengine3d/part3/index.html):
+#### **Demo 2**: load actual vertex content
+
+From Blender/Babylon based on [this](https://david.blob.core.windows.net/softengine3d/part3/index.html).
+
+A JS script has been provided that generates the needed C++ code. It's not great, and not very performant.
 
 ![design](https://github.com/wgroeneveld/gba-bitmap-engine/blob/master/img/monkey.gif?raw=true)
 
@@ -41,7 +47,16 @@ Use the `gba-sprite-engine` instead.
 I am aware of countless optimization opportunities but even thinking about that makes me sleepy. 
 This is a high-level C++ engine, meaning redundant stack objects could also cause problems. And I'm okay with that - it's a proof-of-concept!
 
-#### GBA-Specific problems  
+#### **Demo 3**: rasterization
+
+The `RasterizerRenderer` class draws triangles as 'fast' as possible, using horizontal scanlines. 
+There is a fast way to lines into VRAM. I tried implementing Z-buffering, but the buffer was too big and too slow as z-coords also had to be interpolated... 
+
+![design](https://github.com/wgroeneveld/gba-bitmap-engine/blob/master/img/raster.gif?raw=true)
+
+At this point, I do not think it's that interesting to go on to texture mapping other than the fun of it. Even with a lot of haxx and tricks, the colored monkey won't ever spin at 30FPS... 
+
+### GBA-Specific problems  
 
 **Fixed-point math** sums up things nicely. 
 
@@ -78,3 +93,4 @@ More details in `math.h`.
 
 In any case, lots of rounding errors occur. It is luckily not a problem due to GBA's limited screen dimensions. 
 
+**Limited iWRAM** size is another problem. Use `const` arrays as much as possible!
