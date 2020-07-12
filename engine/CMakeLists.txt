@@ -23,7 +23,7 @@ add_library(${PROJECT_NAME}
         src/renderer/pixelrenderer.cpp
         src/renderer/wirerenderer.cpp
         src/math.cpp
-        src/sound_control.cpp src/scene.cpp src/timer.cpp src/vectorfx.cpp src/mesh.cpp)
+        src/sound_control.cpp src/scene.cpp src/timer.cpp src/vectorfx.cpp src/mesh.cpp src/renderer/raserizerrenderer.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

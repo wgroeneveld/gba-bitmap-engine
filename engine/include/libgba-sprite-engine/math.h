@@ -8,9 +8,9 @@
 #include <libgba-sprite-engine/gba/tonc_types.h>
 #ifdef CODE_COMPILED_AS_PART_OF_TEST
     #include <libgba-sprite-engine/gba/tonc_math_stub.h>
-    #else
+#else
     #include <libgba-sprite-engine/gba/tonc_math.h>
-    #endif
+#endif
 
 #include <cmath>
 #include <string>
@@ -37,8 +37,13 @@ INLINE FIXED fxsin(FIXED fxrad);
 INLINE FIXED fxcos(FIXED fxrad);
 INLINE float rnd(float val);
 INLINE std::string fstr(FIXED which);
+INLINE FIXED interpolate(FIXED min, FIXED max, FIXED gradient);
 
 // ---- impl
+INLINE FIXED interpolate(FIXED min, FIXED max, FIXED gradient) {
+    return min + fxmul((max - min), CLAMP(gradient, 0, ONE));
+}
+
 INLINE float rnd(float val) {
     return (float) ((std::floor(val * 100) + .5) / 100);
 }

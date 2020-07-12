@@ -10,7 +10,7 @@
 
 int main() {
     std::shared_ptr<GBAEngine> engine(new GBAEngine());
-    engine.get()->setRenderer(new WiredRenderer());
+    engine.get()->setRenderer(new RasterizerRenderer());
 
     MonkeyScene* startScene = new MonkeyScene(engine);
     engine->setScene(startScene);

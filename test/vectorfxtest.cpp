@@ -34,6 +34,49 @@ void assertVector(VectorFx expected, VectorFx actual) {
     ASSERT_EQ(rnd2(fx2float(actual.z())), rnd2(fx2float(actual.z()))) << "z incorrect: (act, exp) " << str;
 }
 
+TEST_F(VectorFxSuite, GradientTest) {
+    int y = int2fx(88);
+    /*
+     * pa:
+     * x: 202.9834560692982
+y: 84.93338221282914
+z: 1.0091180828593247
+     pb:
+     x: x: 211.95655997027734
+y: 104.46714141689979
+z: 1.0090892519150232
+     gradient: 0.1569906619168215
+     sx: 204
+     */
+    auto pa = VectorFx::fromInt(203, 85, 1), pb = VectorFx::fromInt(212, 104, 1);
+    auto gradient = VectorFx::gradient(y, pa, pb);
+    ASSERT_FLOAT_EQ(fx2float(gradient), 0.15625);
+}
+
+TEST_F(VectorFxSuite, GradientThenInterpolateTest) {
+    int y = int2fx(88);
+    auto pa = VectorFx::fromInt(203, 85, 1), pb = VectorFx::fromInt(212, 104, 1);
+
+    auto gradient = VectorFx::gradient(y, pa, pb);
+    auto interpolated = interpolate(pa.x(), pb.x(), gradient);
+    ASSERT_EQ(fx2int(interpolated), 204);
+}
+
+TEST_F(VectorFxSuite, ComputeSlope) {
+    /* p2:
+     *  x: 210.58517158313248
+        y: 88.7224853699867
+        z: 1.0090972814678028
+        p1:
+        x: 202.9834560692982
+        y: 84.93338221282914
+        z: 1.0091180828593247
+     */
+    auto p2 = VectorFx::fromInt(210, 88, 1), p1 = VectorFx::fromInt(203, 85, 1);
+    auto result = VectorFx::slope(p1, p2);
+    ASSERT_FLOAT_EQ(fx2float(result), 2.3320312);
+}
+
 TEST_F(VectorFxSuite, ToAndFromFixedIntWorks) {
     auto zAxis = VectorFx::fromInt(0, 0, -10);
     ASSERT_EQ(zAxis.y(), 0);

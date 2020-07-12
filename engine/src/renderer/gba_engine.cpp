@@ -162,21 +162,29 @@ void GBAEngine::flipPage() {
     REG_DISPCNT ^= DCNT_PAGE;
 }
 
-void GBAEngine::plotPixel(const VectorPx &pixel, u8 clrId) {
-    m4_plot(pixel.x(), pixel.y(), clrId);
+void GBAEngine::plotPixel(int x, int y, u8 clrId) {
+    m4_plot(x, y, clrId);
 }
 
-void GBAEngine::plotLine(const VectorPx &point0, const VectorPx &point1, u8 clrId) {
-    // uses tonc's optimalization tricks to get 10 FPS extra compared to standard bline algorithms
-    m4_line(point0.x(), point0.y(), point1.x(), point1.y(), clrId);
+void GBAEngine::plotPixel(const VectorFx &pixel, u8 clrId) {
+    plotPixel(fx2int(pixel.x()), fx2int(pixel.y()), clrId);
 }
 
-VectorPx GBAEngine::project(const VectorFx &coord, const MatrixFx &transMat) {
+// uses tonc's optimalization tricks to get 10 FPS extra compared to standard bline algorithms
+void GBAEngine::plotLine(int p0x, int p0y, int p1x, int p1y, u8 clrId) {
+    m4_line(p0x, p0y, p1x, p1y, clrId);
+}
+
+void GBAEngine::plotLine(const VectorFx &point0, const VectorFx &point1, u8 clrId) {
+    plotLine(fx2int(point0.x()), fx2int(point0.y()), fx2int(point1.x()), fx2int(point1.y()), clrId);
+}
+
+VectorFx GBAEngine::project(const VectorFx &coord, const MatrixFx &transMat) {
     auto point = MatrixFx::transformCoordinates(coord, transMat);
 
     auto x = fxmul(point.x(), GBA_SCREEN_WIDTH_FX) + fxdiv(GBA_SCREEN_WIDTH_FX, TWO);
     auto y = fxmul(-point.y(), GBA_SCREEN_HEIGHT_FX) + fxdiv(GBA_SCREEN_HEIGHT_FX, TWO);
-    return VectorPx::fromFx(x, y);
+    return VectorFx(x, y, point.z());
 }
 
 // does the mesh rendering - to write mem before flipping

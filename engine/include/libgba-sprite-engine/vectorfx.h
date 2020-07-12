@@ -88,6 +88,20 @@ public:
         v.z = fxmul(v.z, num);
     }
 
+    inline static FIXED gradient(FIXED y, const VectorFx& pa, const VectorFx &pb) {
+        if(pa.y() == pb.y()) {
+            return int2fx(1);
+        }
+        return fxdiv((y - pa.y()), (pb.y() - pa.y()));
+    }
+
+    inline static FIXED slope(const VectorFx &p1, const VectorFx &p2) {
+        if(p2.y() - p1.y() > 0) {
+            return fxdiv(p2.x() - p1.x(), p2.y() - p1.y());
+        }
+        return 0;
+    }
+
     inline FIXED x() const { return v.x; }
     inline float floatX() const { return fx2float(v.x); }
     inline void setX(FIXED x) { v.x = x; }

@@ -17,6 +17,11 @@ protected:
     }
 };
 
+TEST_F(FpSuite, InterpolateTests) {
+    ASSERT_FLOAT_EQ(fx2float(interpolate(ONE, int2fx(10), float2fx(0))), 1);
+    ASSERT_FLOAT_EQ(fx2float(interpolate(ONE, int2fx(10), ONE)), 9.9648438);
+    ASSERT_FLOAT_EQ(fx2float(interpolate(ONE, int2fx(10), float2fx(0.1))), 1.8789062);
+}
 
 // from LUT doxygen:
 //! Look-up a cosine value (2&#960; = 0x10000)

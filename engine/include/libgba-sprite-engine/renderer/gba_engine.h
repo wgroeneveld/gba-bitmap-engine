@@ -9,7 +9,6 @@
 #include <libgba-sprite-engine/gba/tonc_memmap.h>
 #include <libgba-sprite-engine/gba/tonc_memmap.h>
 #include <libgba-sprite-engine/vectorfx.h>
-#include <libgba-sprite-engine/vectorpx.h>
 #include <libgba-sprite-engine/matrixfx.h>
 #include <libgba-sprite-engine/renderer/renderer.h>
 #include "libgba-sprite-engine/scene.h"
@@ -71,10 +70,11 @@ public:
 
     void setRenderer(Renderer* r) { renderer = std::unique_ptr<Renderer>(r); };
 
-    VectorPx project(const VectorFx &coord, const MatrixFx &transMat);
+    VectorFx project(const VectorFx &coord, const MatrixFx &transMat);
     void plotPixel(int x, int y, u8 clrId);
-    void plotPixel(const VectorPx &pixel, u8 clrId);
-    void plotLine(const VectorPx &point0, const VectorPx &point1, u8 clrId);
+    void plotPixel(const VectorFx &pixel, u8 clrId);
+    void plotLine(const VectorFx &point0, const VectorFx &point1, u8 clrId);
+    void plotLine(int p0x, int p0y, int p1x, int p1y, u8 clrId);
 };
 
 

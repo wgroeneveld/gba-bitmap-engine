@@ -163,7 +163,7 @@ void bmp8_line(int x1, int y1, int x2, int y2, u32 clr,
     //	with mask-flips
     // NOTE: (mask>>31) is equivalent to (x&1) ? 0 : 1
 
-    if(dx>=dy)		// Diagonal, slope <= 1
+    if(dx>=dy)		// Diagonal, slopeFx <= 1
     {
         dd= 2*dy - dx;
 
@@ -180,7 +180,7 @@ void bmp8_line(int x1, int y1, int x2, int y2, u32 clr,
             mask = ~mask;
         }
     }
-    else				// # Diagonal, slope > 1
+    else				// # Diagonal, slopeFx > 1
     {
         dd= 2*dx - dy;
 

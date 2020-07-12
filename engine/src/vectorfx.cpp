@@ -42,7 +42,7 @@ std::deque<VECTOR> VectorFx::bresenhamLineTo(VECTOR dest) {
             y += step.y;
         }
     } else if(delta.x >= delta.y) {
-        // Diagonal, slope <= 1
+        // Diagonal, slopeFx <= 1
         dd = 2 * delta.y - delta.x;
 
         for(ii = 0; ii <= delta.x; ii++) {
@@ -55,7 +55,7 @@ std::deque<VECTOR> VectorFx::bresenhamLineTo(VECTOR dest) {
             x += step.x;
         }
     } else {
-        // Diagonal, slope > 1
+        // Diagonal, slopeFx > 1
         dd = 2 * delta.x - delta.y;
 
         for(ii = 0; ii <= delta.y; ii++) {
