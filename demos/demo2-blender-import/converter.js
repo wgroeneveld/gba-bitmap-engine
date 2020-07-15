@@ -1,16 +1,27 @@
+/*-----
+partially reverse-engineered https://david.blob.core.windows.net/softengine3d/part3/index.html
+added compatibility with newer Babylon export formats
+
+try this in your browser:
+copy(BABYLON.SceneSerializer.SerializeMesh(BABYLON.MeshBuilder.CreateBox("bla", {}, scene), true, true))
+
+What's possible with the MeshBuilder? See for example https://doc.babylonjs.com/how_to/polyhedra_shapes
+------*/
+
 var fs = require('fs');
 
-var jsonObject = JSON.parse(fs.readFileSync('monkey.babylon', 'utf8'));
+var args = process.argv.slice(2);
+var jsonObject = JSON.parse(fs.readFileSync(args[0], 'utf8'));
 
 var result =
     "#include <libgba-sprite-engine/mesh.h>\n" +
     "Mesh* createMesh() { \n" +
     "\t auto obj = new Mesh();\n";
 
-var meshes = 0;
+var vertices = 0;
 function addMesh(x, y, z) {
     result += `\t obj->add(VectorFx::fromFloat(${x}, ${y}, ${z}));\n`;
-    meshes++;
+    vertices++;
 }
 var faces = 0;
 function addFace(a, b, c) {
@@ -26,11 +37,18 @@ function done() {
         "}\n"
 }
 
-// partially reverse-engineered https://david.blob.core.windows.net/softengine3d/part3/index.html
 for(var meshIndex = 0; meshIndex < jsonObject.meshes.length; meshIndex++) {
-    var verticesArray = jsonObject.meshes[meshIndex].vertices;
-    var indicesArray = jsonObject.meshes[meshIndex].indices;
-    var uvCount = jsonObject.meshes[meshIndex].uvCount;
+    const mesh = jsonObject.meshes[meshIndex];
+    var verticesArray = mesh.vertices;
+    var indicesArray = mesh.indices;
+    var uvCount = mesh.uvCount;
+    if(mesh.geometryId) {
+        const data = jsonObject.geometries.vertexData.find(v => v.id === mesh.geometryId);
+        verticesArray = data.positions
+        indicesArray = data.indices
+        // also contains .normals and .uvs
+    }
+
     var verticesStep = 1;
     switch(uvCount) {
         case 0:
@@ -42,6 +60,9 @@ for(var meshIndex = 0; meshIndex < jsonObject.meshes.length; meshIndex++) {
         case 2:
             verticesStep = 10;
             break;
+        default:
+            verticesStep = 3;
+            break;
     }
     var verticesCount = verticesArray.length / verticesStep;
     var facesCount = indicesArray.length / 3;
@@ -51,19 +72,30 @@ for(var meshIndex = 0; meshIndex < jsonObject.meshes.length; meshIndex++) {
         var y = verticesArray[index * verticesStep + 1];
         var z = verticesArray[index * verticesStep + 2];
 
-        addMesh(x, y, z);
+        if(x !== undefined && y !== undefined && z !== undefined) {
+            addMesh(x, y, z);
+        } else {
+            console.log(`WARN; vertices index ${index} with step ${verticesStep} contains invalid data: ${x}, ${y}, ${z}`)
+        }
     }
     for(var index = 0; index < facesCount; index++) {
         var a = indicesArray[index * 3];
         var b = indicesArray[index * 3 + 1];
         var c = indicesArray[index * 3 + 2];
 
-        addFace(a, b, c);
+        if(a !== undefined && b !== undefined && c !== undefined) {
+            addFace(a, b, c);
+        } else {
+            console.log(`WARN; indices index ${index} contains invalid data: ${a}, ${b}, ${c}`)
+        }
     }
-    var position = jsonObject.meshes[meshIndex].position;
+    var position = mesh.position;
     setPosition(position);
 }
 
 done();
 fs.writeFileSync('src/mesh.cpp', result);
-console.log(`mesh.cpp written; ${meshes} meshes and ${faces} faces. GLHF!`)
+console.log(`mesh.cpp written; ${vertices} vertices and ${faces} faces. GLHF!`)
+if(vertices > 800) {
+    console.log('WARNING lots of vertices detected, this will not run well...');
+}
