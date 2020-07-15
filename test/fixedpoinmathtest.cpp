@@ -5,8 +5,8 @@
 #include <gtest/gtest.h>
 #include <math.h>
 #include <cmath>
-#include <libgba-sprite-engine/gba/tonc_math_stub.h>
-#include <libgba-sprite-engine/math.h>
+#include <libgba-bitmap-engine/gba/tonc_math_stub.h>
+#include <libgba-bitmap-engine/math.h>
 
 class FpSuite : public ::testing::Test {
 protected:

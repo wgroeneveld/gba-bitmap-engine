@@ -5,9 +5,9 @@
 #ifndef GBA_SPRITE_ENGINE_SAMPLE_START_SCENE_H
 #define GBA_SPRITE_ENGINE_SAMPLE_START_SCENE_H
 
-#include <libgba-sprite-engine/scene.h>
-#include <libgba-sprite-engine/mesh.h>
-#include <libgba-sprite-engine/camera.h>
+#include <libgba-bitmap-engine/scene.h>
+#include <libgba-bitmap-engine/mesh.h>
+#include <libgba-bitmap-engine/camera.h>
 #include <memory>
 
 class WireScene : public Scene {

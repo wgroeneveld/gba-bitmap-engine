@@ -2,9 +2,9 @@
 // Created by Wouter Groeneveld on 02/08/18.
 //
 
-#include <libgba-sprite-engine/gba/tonc_memdef.h>
-#include <libgba-sprite-engine/renderer/gba_engine.h>
-#include <libgba-sprite-engine/background/text_stream.h>
+#include <libgba-bitmap-engine/gba/tonc_memdef.h>
+#include <libgba-bitmap-engine/renderer/gba_engine.h>
+#include <libgba-bitmap-engine/background/text_stream.h>
 #include "wirescene.h"
 
 

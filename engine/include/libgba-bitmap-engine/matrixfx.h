@@ -6,15 +6,15 @@
 #define GBA_BITMAP_ENGINE_PROJECT_GBAMATRIX_H
 
 #define MATRIX_DIMENSION 16
-#include <libgba-sprite-engine/math.h>
-#include <libgba-sprite-engine/vectorfx.h>
+#include <libgba-bitmap-engine/math.h>
+#include <libgba-bitmap-engine/vectorfx.h>
 
 #include <cstdio>
 
 #ifdef CODE_COMPILED_AS_PART_OF_TEST
-    #include <libgba-sprite-engine/gba/tonc_math_stub.h>
+    #include <libgba-bitmap-engine/gba/tonc_math_stub.h>
     #else
-    #include <libgba-sprite-engine/gba/tonc_math.h>
+    #include <libgba-bitmap-engine/gba/tonc_math.h>
 #endif
 
 class MatrixFx {

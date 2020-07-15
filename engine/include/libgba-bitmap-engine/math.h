@@ -5,11 +5,11 @@
 #ifndef GBA_BITMAP_ENGINE_PROJECT_MATH_H
 #define GBA_BITMAP_ENGINE_PROJECT_MATH_H
 
-#include <libgba-sprite-engine/gba/tonc_types.h>
+#include <libgba-bitmap-engine/gba/tonc_types.h>
 #ifdef CODE_COMPILED_AS_PART_OF_TEST
-    #include <libgba-sprite-engine/gba/tonc_math_stub.h>
+    #include <libgba-bitmap-engine/gba/tonc_math_stub.h>
 #else
-    #include <libgba-sprite-engine/gba/tonc_math.h>
+    #include <libgba-bitmap-engine/gba/tonc_math.h>
 #endif
 
 #include <cmath>

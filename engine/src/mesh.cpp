@@ -2,7 +2,7 @@
 // Created by Wouter Groeneveld on 08/07/20.
 //
 
-#include <libgba-sprite-engine/mesh.h>
+#include <libgba-bitmap-engine/mesh.h>
 #include <memory>
 
 

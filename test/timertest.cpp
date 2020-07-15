@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <libgba-sprite-engine/timer.h>
+#include <libgba-bitmap-engine/timer.h>
 
 class TimerSuite : public ::testing::Test {
 protected:

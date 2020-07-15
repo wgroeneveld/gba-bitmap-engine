@@ -2,14 +2,14 @@
 // Created by Wouter Groeneveld on 28/07/18.
 //
 
-#include <libgba-sprite-engine/gba/tonc_memdef.h>
-#include <libgba-sprite-engine/gba/tonc_video.h>
-#include <libgba-sprite-engine/renderer/gba_engine.h>
+#include <libgba-bitmap-engine/gba/tonc_memdef.h>
+#include <libgba-bitmap-engine/gba/tonc_video.h>
+#include <libgba-bitmap-engine/renderer/gba_engine.h>
 #include <cstring>
-#include <libgba-sprite-engine/gba/tonc_core.h>
-#include <libgba-sprite-engine/matrixfx.h>
-#include <libgba-sprite-engine/background/text_stream.h>
-#include <libgba-sprite-engine/mesh.h>
+#include <libgba-bitmap-engine/gba/tonc_core.h>
+#include <libgba-bitmap-engine/matrixfx.h>
+#include <libgba-bitmap-engine/background/text_stream.h>
+#include <libgba-bitmap-engine/mesh.h>
 
 std::unique_ptr<SoundControl> GBAEngine::activeChannelA;
 std::unique_ptr<SoundControl> GBAEngine::activeChannelB;

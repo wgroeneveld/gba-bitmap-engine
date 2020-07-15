@@ -2,7 +2,7 @@
 // Created by Wouter Groeneveld on 14/12/18.
 //
 
-#include <libgba-sprite-engine/vectorfx.h>
+#include <libgba-bitmap-engine/vectorfx.h>
 
 
 std::deque<VECTOR> VectorFx::bresenhamLineTo(VECTOR dest) {

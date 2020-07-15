@@ -5,7 +5,7 @@
 
 
 #include <gtest/gtest.h>
-#include <libgba-sprite-engine/vectorfx.h>
+#include <libgba-bitmap-engine/vectorfx.h>
 #include "tonc_bios_stub.h"
 
 class VectorFxSuite : public ::testing::Test {

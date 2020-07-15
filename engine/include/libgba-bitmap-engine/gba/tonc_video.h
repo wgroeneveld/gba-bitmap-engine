@@ -6,8 +6,8 @@
 #ifndef GBA_BITMAP_ENGINE_PROJECT_TONC_VIDEO_H
 #define GBA_BITMAP_ENGINE_PROJECT_TONC_VIDEO_H
 
-#include <libgba-sprite-engine/gba/tonc_types.h>
-#include <libgba-sprite-engine/gba/toolbox.h>
+#include <libgba-bitmap-engine/gba/tonc_types.h>
+#include <libgba-bitmap-engine/gba/toolbox.h>
 
 void bmp8_plot(int x, int y, u32 clr, void *dstBase, uint dstP);
 

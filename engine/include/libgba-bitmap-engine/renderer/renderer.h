@@ -5,8 +5,8 @@
 #ifndef GBA_BITMAP_ENGINE_PROJECT_RENDERER_H
 #define GBA_BITMAP_ENGINE_PROJECT_RENDERER_H
 
-#include <libgba-sprite-engine/matrixfx.h>
-#include <libgba-sprite-engine/mesh.h>
+#include <libgba-bitmap-engine/matrixfx.h>
+#include <libgba-bitmap-engine/mesh.h>
 
 class GBAEngine;
 

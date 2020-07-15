@@ -3,9 +3,9 @@
 //
 
 //! Plot a single pixel on a 8-bit buffer
-#include <libgba-sprite-engine/gba/tonc_types.h>
-#include <libgba-sprite-engine/gba/tonc_core.h>
-#include <libgba-sprite-engine/gba/toolbox.h>
+#include <libgba-bitmap-engine/gba/tonc_types.h>
+#include <libgba-bitmap-engine/gba/tonc_core.h>
+#include <libgba-bitmap-engine/gba/toolbox.h>
 
 /*!
 	\param x		X-coord.

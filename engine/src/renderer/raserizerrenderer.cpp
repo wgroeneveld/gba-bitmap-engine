@@ -2,10 +2,10 @@
 // Created by Wouter Groeneveld on 11/07/20.
 //
 
-#include <libgba-sprite-engine/renderer/renderer.h>
-#include <libgba-sprite-engine/renderer/gba_engine.h>
-#include <libgba-sprite-engine/math.h>
-#include <libgba-sprite-engine/background/text_stream.h>
+#include <libgba-bitmap-engine/renderer/renderer.h>
+#include <libgba-bitmap-engine/renderer/gba_engine.h>
+#include <libgba-bitmap-engine/math.h>
+#include <libgba-bitmap-engine/background/text_stream.h>
 
 // drawing line between 2 points from left to right
 // papb -> pcpd

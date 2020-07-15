@@ -14,7 +14,7 @@ var args = process.argv.slice(2);
 var jsonObject = JSON.parse(fs.readFileSync(args[0], 'utf8'));
 
 var result =
-    "#include <libgba-sprite-engine/mesh.h>\n" +
+    "#include <libgba-bitmap-engine/mesh.h>\n" +
     "Mesh* createMesh() { \n" +
     "\t auto obj = new Mesh();\n";
 

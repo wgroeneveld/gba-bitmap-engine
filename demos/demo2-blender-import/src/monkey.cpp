@@ -2,7 +2,7 @@
 // Created by Wouter Groeneveld on 11/07/20.
 //
 
-#include <libgba-sprite-engine/background/text_stream.h>
+#include <libgba-bitmap-engine/background/text_stream.h>
 #include "monkey.h"
 
 // BLACK, [white->black] from 0xFFFF / 252

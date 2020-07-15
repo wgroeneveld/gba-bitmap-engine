@@ -5,10 +5,10 @@
 #ifndef GBA_BITMAP_ENGINE_PROJECT_MONKEY_H
 #define GBA_BITMAP_ENGINE_PROJECT_MONKEY_H
 
-#include <libgba-sprite-engine/scene.h>
-#include <libgba-sprite-engine/mesh.h>
-#include <libgba-sprite-engine/camera.h>
-#include <libgba-sprite-engine/renderer/gba_engine.h>
+#include <libgba-bitmap-engine/scene.h>
+#include <libgba-bitmap-engine/mesh.h>
+#include <libgba-bitmap-engine/camera.h>
+#include <libgba-bitmap-engine/renderer/gba_engine.h>
 #include <memory>
 
 // forward declaration of generated mesh.cpp file

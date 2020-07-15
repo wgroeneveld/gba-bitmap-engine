@@ -1,6 +1,6 @@
-#include <libgba-sprite-engine/scene.h>
-#include <libgba-sprite-engine/renderer/gba_engine.h>
-#include <libgba-sprite-engine/palette/palette_manager.h>
+#include <libgba-bitmap-engine/scene.h>
+#include <libgba-bitmap-engine/renderer/gba_engine.h>
+#include <libgba-bitmap-engine/palette/palette_manager.h>
 
 #include "wirescene.h"
 

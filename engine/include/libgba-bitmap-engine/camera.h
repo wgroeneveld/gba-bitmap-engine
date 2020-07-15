@@ -5,7 +5,7 @@
 #ifndef GBA_BITMAP_ENGINE_PROJECT_CAMERA_H
 #define GBA_BITMAP_ENGINE_PROJECT_CAMERA_H
 
-#include <libgba-sprite-engine/vectorfx.h>
+#include <libgba-bitmap-engine/vectorfx.h>
 
 class Camera {
 private:

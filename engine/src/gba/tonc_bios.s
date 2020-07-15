@@ -5,7 +5,7 @@
 //! \author J Vijn
 //! \date 20071130 - 20090801
 
-#include <libgba-sprite-engine/gba/tonc_asminc.h>
+#include <libgba-bitmap-engine/gba/tonc_asminc.h>
 
 @ === SoftReset [00h] =================================================
 @ DECL: void SoftReset();

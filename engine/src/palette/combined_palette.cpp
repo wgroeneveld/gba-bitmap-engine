@@ -3,7 +3,7 @@
 //
 
 
-#include <libgba-sprite-engine/palette/palette_manager.h>
+#include <libgba-bitmap-engine/palette/palette_manager.h>
 
 void CombinedPalette::increaseBrightness(PaletteManager& palette, int bank, int index, u32 intensity) {
     auto current = palette.get(bank, index);

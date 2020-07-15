@@ -2,7 +2,7 @@
 // Created by Wouter Groeneveld on 06/12/18.
 //
 
-#include <libgba-sprite-engine/timer.h>
+#include <libgba-bitmap-engine/timer.h>
 #include <sstream>
 
 void Timer::onvblank() {

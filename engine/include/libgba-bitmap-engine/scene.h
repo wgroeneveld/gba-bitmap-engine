@@ -8,9 +8,9 @@
 #include <vector>
 #include <memory>
 #include <functional>
-#include <libgba-sprite-engine/camera.h>
-#include <libgba-sprite-engine/mesh.h>
-#include <libgba-sprite-engine/palette/palette_manager.h>
+#include <libgba-bitmap-engine/camera.h>
+#include <libgba-bitmap-engine/mesh.h>
+#include <libgba-bitmap-engine/palette/palette_manager.h>
 
 class GBAEngine;
 

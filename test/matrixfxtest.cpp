@@ -4,12 +4,12 @@
 
 #include <gtest/gtest.h>
 #include <math.h>
-#include <libgba-sprite-engine/matrixfx.h>
-#include <libgba-sprite-engine/math.h>
-#include <libgba-sprite-engine/mesh.h>
-#include <libgba-sprite-engine/camera.h>
-#include <libgba-sprite-engine/renderer/gba_engine.h>
-#include <libgba-sprite-engine/gba/toolbox.h>
+#include <libgba-bitmap-engine/matrixfx.h>
+#include <libgba-bitmap-engine/math.h>
+#include <libgba-bitmap-engine/mesh.h>
+#include <libgba-bitmap-engine/camera.h>
+#include <libgba-bitmap-engine/renderer/gba_engine.h>
+#include <libgba-bitmap-engine/gba/toolbox.h>
 
 class MatrixFxSuite : public ::testing::Test {
 protected:

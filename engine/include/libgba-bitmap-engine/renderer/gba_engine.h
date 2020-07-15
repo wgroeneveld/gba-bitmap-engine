@@ -6,14 +6,14 @@
 #define GBA_SPRITE_ENGINE_GBAENGINE_H
 
 
-#include <libgba-sprite-engine/gba/tonc_memmap.h>
-#include <libgba-sprite-engine/gba/tonc_memmap.h>
-#include <libgba-sprite-engine/vectorfx.h>
-#include <libgba-sprite-engine/matrixfx.h>
-#include <libgba-sprite-engine/renderer/renderer.h>
-#include "libgba-sprite-engine/scene.h"
-#include "libgba-sprite-engine/sound_control.h"
-#include "libgba-sprite-engine/timer.h"
+#include <libgba-bitmap-engine/gba/tonc_memmap.h>
+#include <libgba-bitmap-engine/gba/tonc_memmap.h>
+#include <libgba-bitmap-engine/vectorfx.h>
+#include <libgba-bitmap-engine/matrixfx.h>
+#include <libgba-bitmap-engine/renderer/renderer.h>
+#include <libgba-bitmap-engine/scene.h>
+#include <libgba-bitmap-engine/sound_control.h>
+#include <libgba-bitmap-engine/timer.h>
 
 
 const unsigned int black[VRAM_PAGE_SIZE] = {};
