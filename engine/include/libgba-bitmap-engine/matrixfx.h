@@ -115,6 +115,13 @@ public:
         return "(" + mstr(12) + "," + mstr(13) + "," + mstr(14) + "," + mstr(15) +")";
     }
 
+    inline static VectorFx transformNormal(const VectorFx& vector, const MatrixFx &transformation) {
+        FIXED x = fxmul(vector.x(), transformation.mAt(0)) + fxmul(vector.y(), transformation.mAt(4)) + fxmul(vector.z(), transformation.mAt(8));
+        FIXED y = fxmul(vector.x(), transformation.mAt(1)) + fxmul(vector.y(), transformation.mAt(5)) + fxmul(vector.z(), transformation.mAt(9));
+        FIXED z = fxmul(vector.x(), transformation.mAt(2)) + fxmul(vector.y(), transformation.mAt(6)) + fxmul(vector.z(), transformation.mAt(10));
+        return VectorFx(x, y, z);
+    }
+
     inline static VectorFx transformCoordinates(const VectorFx &vector, const MatrixFx &transformation) {
         FIXED x = fxmul(vector.x(), transformation.mAt(0)) + fxmul(vector.y(), transformation.mAt(4)) + fxmul(vector.z(), transformation.mAt(8)) + transformation.mAt(12);
         FIXED y = fxmul(vector.x(), transformation.mAt(1)) + fxmul(vector.y(), transformation.mAt(5)) + fxmul(vector.z(), transformation.mAt(9)) + transformation.mAt(13);

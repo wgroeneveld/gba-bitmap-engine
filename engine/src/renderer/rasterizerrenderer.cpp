@@ -64,21 +64,28 @@ void RasterizerRenderer::plotTriangle(const VectorFx& pt1, const VectorFx& pt2, 
     }
 }
 
-void RasterizerRenderer::render(const MatrixFx &transformationMatrix, const Mesh *mesh) {
+bool RasterizerRenderer::backFaceCull(const Face *face, const MatrixFx &worldView) {
+    auto transformedNormal = MatrixFx::transformNormal(face->normal(), worldView);
+    return transformedNormal.z() < 0;
+}
+
+void RasterizerRenderer::render(const MatrixFx &transformationMatrix, const MatrixFx &worldView, const Mesh *mesh) {
     bool colorSwitch = false;
     int i = 0;
     for (auto &face : mesh->faces()) {
-        auto &vertexA = mesh->vertices()[face.a];
-        auto &vertexB = mesh->vertices()[face.b];
-        auto &vertexC = mesh->vertices()[face.c];
+        if(backFaceCull(face.get(), worldView)) {
+            auto &vertexA = mesh->vertices()[face->a()];
+            auto &vertexB = mesh->vertices()[face->b()];
+            auto &vertexC = mesh->vertices()[face->c()];
 
-        auto pixelA = engine->project(*vertexA.get(), transformationMatrix);
-        auto pixelB = engine->project(*vertexB.get(), transformationMatrix);
-        auto pixelC = engine->project(*vertexC.get(), transformationMatrix);
+            auto pixelA = engine->project(vertexA.get()->coords(), transformationMatrix);
+            auto pixelB = engine->project(vertexB.get()->coords(), transformationMatrix);
+            auto pixelC = engine->project(vertexC.get()->coords(), transformationMatrix);
 
-        COLOR cI = ONE + fxmul(fxdiv(int2fx(i), int2fx(mesh->faces().size())), int2fx(250));
-        plotTriangle(pixelA, pixelB, pixelC, fx2int(cI));
-        colorSwitch = !colorSwitch;
-        i++;
+            COLOR cI = ONE + fxmul(fxdiv(int2fx(i), int2fx(mesh->faces().size())), int2fx(250));
+            plotTriangle(pixelA, pixelB, pixelC, fx2int(cI));
+            colorSwitch = !colorSwitch;
+            i++;
+        }
     }
 }

@@ -23,9 +23,13 @@ function addMesh(x, y, z) {
     result += `\t obj->add(VectorFx::fromFloat(${x}, ${y}, ${z}));\n`;
     vertices++;
 }
+function addMeshWithNormals(x, y, z, nx, ny, nz) {
+    result += `\t obj->add(VectorFx::fromFloat(${x}, ${y}, ${z}), VectorFx::fromFloat(${nx}, ${ny}, ${nz}));\n`;
+    vertices++;
+}
 var faces = 0;
 function addFace(a, b, c) {
-    result += `\t obj->addFace({ ${a}, ${b}, ${c}});\n`;
+    result += `\t obj->addFace(${a}, ${b}, ${c});\n`;
     faces++;
 }
 function setPosition(position) {
@@ -39,14 +43,14 @@ function done() {
 
 for(var meshIndex = 0; meshIndex < jsonObject.meshes.length; meshIndex++) {
     const mesh = jsonObject.meshes[meshIndex];
+    var data = undefined;
     var verticesArray = mesh.vertices;
     var indicesArray = mesh.indices;
     var uvCount = mesh.uvCount;
     if(mesh.geometryId) {
-        const data = jsonObject.geometries.vertexData.find(v => v.id === mesh.geometryId);
-        verticesArray = data.positions
-        indicesArray = data.indices
-        // also contains .normals and .uvs
+        data = jsonObject.geometries.vertexData.find(v => v.id === mesh.geometryId);
+        verticesArray = data.positions;
+        indicesArray = data.indices;
     }
 
     var verticesStep = 1;
@@ -73,7 +77,19 @@ for(var meshIndex = 0; meshIndex < jsonObject.meshes.length; meshIndex++) {
         var z = verticesArray[index * verticesStep + 2];
 
         if(x !== undefined && y !== undefined && z !== undefined) {
-            addMesh(x, y, z);
+            if(data && data.normals) {
+                var nx = data.normals[index * verticesStep];
+                var ny = data.normals[index * verticesStep + 1];
+                var nz = data.normals[index * verticesStep + 2];
+
+                addMeshWithNormals(x, y, z, nx, ny, nz);
+            } else {
+                var nx = verticesArray[index * verticesStep + 3];
+                var ny = verticesArray[index * verticesStep + 4];
+                var nz = verticesArray[index * verticesStep + 5];
+
+                addMeshWithNormals(x, y, z, nx, ny, nz);
+            }
         } else {
             console.log(`WARN; vertices index ${index} with step ${verticesStep} contains invalid data: ${x}, ${y}, ${z}`)
         }

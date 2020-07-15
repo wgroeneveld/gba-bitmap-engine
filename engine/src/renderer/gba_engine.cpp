@@ -187,15 +187,17 @@ VectorFx GBAEngine::project(const VectorFx &coord, const MatrixFx &transMat) {
     return VectorFx(x, y, point.z());
 }
 
-// does the mesh rendering - to write mem before flipping
 void GBAEngine::render() {
+    // I tried optimizing this; without camera changes it does not need to be recalculated each time
+    // However, 0 FPS difference... Most performance issues are inside mesh render()
     auto viewMatrix = MatrixFx::lookAtLH(currentCamera.getPosition(), currentCamera.getTarget(), VectorFx::up());
 
     for(auto& mesh :currentScene->meshes()) {
         auto worldMatrix = MatrixFx::rotationYawPitchRoll(mesh->roty(), mesh->rotx(), mesh->rotz()) * MatrixFx::translation(mesh->position());
-        auto transformMatrix = worldMatrix * viewMatrix * projectionMatrix;
+        auto worldView = worldMatrix * viewMatrix;
+        auto transformMatrix = worldView * projectionMatrix;
 
-        renderer->render(transformMatrix, mesh);
+        renderer->render(transformMatrix, worldView, mesh);
     }
 }
 

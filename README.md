@@ -56,6 +56,16 @@ There is a fast way to lines into VRAM. I tried implementing Z-buffering, but th
 
 At this point, I do not think it's that interesting to go on to texture mapping other than the fun of it. Even with a lot of haxx and tricks, the colored monkey won't ever spin at 30FPS... 
 
+#### **Demo 3b**: with back-face culling
+
+It did improve performance. I exported a few Babylon meshes, and the octahedron with 8 faces does run at 20FPS compared to 11FPS when back-face culling was implemented (that omits rendering certain faces if z < 0)
+
+![design](https://github.com/wgroeneveld/gba-bitmap-engine/blob/master/img/octa.gif?raw=true)
+
+Changing colors indicate certain triangles were not drawn (into the background). It does not help a lot with our monkey, alas. Too many vertices...
+
+More examples of meshes (box, cylinder, octahedron, sphere, torus) included.  
+
 ### GBA-Specific problems  
 
 **Fixed-point math** sums up things nicely. 

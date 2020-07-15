@@ -5,15 +5,11 @@
 #ifndef GBA_BITMAP_ENGINE_PROJECT_MESH_H
 #define GBA_BITMAP_ENGINE_PROJECT_MESH_H
 
-#include "vectorfx.h"
+#include <libgba-bitmap-engine/vertex.h>
+#include <libgba-bitmap-engine/vectorfx.h>
+#include <libgba-bitmap-engine/face.h>
 #include <vector>
 #include <memory>
-
-typedef struct {
-    int a;
-    int b;
-    int c;
-} Face;
 
 class Mesh {
 private:
@@ -21,18 +17,20 @@ private:
     VectorFx rot;
     u8 cIndex;
 
-    std::vector<std::unique_ptr<VectorFx>> verticesArr;
-    std::vector<Face> facesArr;
+    std::vector<std::unique_ptr<Vertex>> verticesArr;
+    std::vector<std::unique_ptr<Face>> facesArr;
 
 public:
 
+    void add(VectorFx coords, VectorFx normal);
     void add(VectorFx v);
-    void addFace(Face f);
-    inline std::vector<std::unique_ptr<VectorFx>> const& vertices() const {
+    void addFace(int a, int b, int c);
+
+    inline std::vector<std::unique_ptr<Vertex>> const& vertices() const {
         return verticesArr;
     }
 
-    inline std::vector<Face> const& faces() const {
+    inline std::vector<std::unique_ptr<Face>> const& faces() const {
         return facesArr;
     }
 
