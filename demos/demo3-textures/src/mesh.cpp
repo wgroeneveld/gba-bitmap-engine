@@ -1,0 +1,42 @@
+#include <libgba-bitmap-engine/mesh.h>
+Mesh* createMesh() { 
+	 auto obj = new Mesh();
+	 obj->add(VectorFx::fromFloat(0.5, -0.5, 0.5), VectorFx::fromFloat(0, 0, 1), 1, 1);
+	 obj->add(VectorFx::fromFloat(-0.5, -0.5, 0.5), VectorFx::fromFloat(0, 0, 1), 1, 0);
+	 obj->add(VectorFx::fromFloat(-0.5, 0.5, 0.5), VectorFx::fromFloat(0, 0, 1), 0, 1);
+	 obj->add(VectorFx::fromFloat(0.5, 0.5, 0.5), VectorFx::fromFloat(0, 0, 1), 1, 0);
+	 obj->add(VectorFx::fromFloat(0.5, 0.5, -0.5), VectorFx::fromFloat(0, 0, -1), 0, 0);
+	 obj->add(VectorFx::fromFloat(-0.5, 0.5, -0.5), VectorFx::fromFloat(0, 0, -1), 0, 1);
+	 obj->add(VectorFx::fromFloat(-0.5, -0.5, -0.5), VectorFx::fromFloat(0, 0, -1), 1, 0);
+	 obj->add(VectorFx::fromFloat(0.5, -0.5, -0.5), VectorFx::fromFloat(0, 0, -1), 0, 1);
+	 obj->add(VectorFx::fromFloat(0.5, 0.5, -0.5), VectorFx::fromFloat(1, 0, 0), 1, 1);
+	 obj->add(VectorFx::fromFloat(0.5, -0.5, -0.5), VectorFx::fromFloat(1, 0, 0), 1, 0);
+	 obj->add(VectorFx::fromFloat(0.5, -0.5, 0.5), VectorFx::fromFloat(1, 0, 0), 0, 1);
+	 obj->add(VectorFx::fromFloat(0.5, 0.5, 0.5), VectorFx::fromFloat(1, 0, 0), 1, 0);
+	 obj->add(VectorFx::fromFloat(-0.5, 0.5, 0.5), VectorFx::fromFloat(-1, 0, 0), 0, 0);
+	 obj->add(VectorFx::fromFloat(-0.5, -0.5, 0.5), VectorFx::fromFloat(-1, 0, 0), 0, 1);
+	 obj->add(VectorFx::fromFloat(-0.5, -0.5, -0.5), VectorFx::fromFloat(-1, 0, 0), 1, 0);
+	 obj->add(VectorFx::fromFloat(-0.5, 0.5, -0.5), VectorFx::fromFloat(-1, 0, 0), 0, 1);
+	 obj->add(VectorFx::fromFloat(-0.5, 0.5, 0.5), VectorFx::fromFloat(0, 1, 0), 1, 1);
+	 obj->add(VectorFx::fromFloat(-0.5, 0.5, -0.5), VectorFx::fromFloat(0, 1, 0), 1, 0);
+	 obj->add(VectorFx::fromFloat(0.5, 0.5, -0.5), VectorFx::fromFloat(0, 1, 0), 0, 1);
+	 obj->add(VectorFx::fromFloat(0.5, 0.5, 0.5), VectorFx::fromFloat(0, 1, 0), 1, 0);
+	 obj->add(VectorFx::fromFloat(0.5, -0.5, 0.5), VectorFx::fromFloat(0, -1, 0), 0, 0);
+	 obj->add(VectorFx::fromFloat(0.5, -0.5, -0.5), VectorFx::fromFloat(0, -1, 0), 0, 1);
+	 obj->add(VectorFx::fromFloat(-0.5, -0.5, -0.5), VectorFx::fromFloat(0, -1, 0), 1, 0);
+	 obj->add(VectorFx::fromFloat(-0.5, -0.5, 0.5), VectorFx::fromFloat(0, -1, 0), 0, 1);
+	 obj->addFace(0, 1, 2);
+	 obj->addFace(0, 2, 3);
+	 obj->addFace(4, 5, 6);
+	 obj->addFace(4, 6, 7);
+	 obj->addFace(8, 9, 10);
+	 obj->addFace(8, 10, 11);
+	 obj->addFace(12, 13, 14);
+	 obj->addFace(12, 14, 15);
+	 obj->addFace(16, 17, 18);
+	 obj->addFace(16, 18, 19);
+	 obj->addFace(20, 21, 22);
+	 obj->addFace(20, 22, 23);
+	 obj->setPosition(VectorFx::fromInt(0, 0, 0));
+	 return obj;
+}

@@ -30,3 +30,4 @@ add_subdirectory(test)
 
 add_subdirectory(demos/demo1-wireframes)
 add_subdirectory(demos/demo2-blender-import)
+add_subdirectory(demos/demo3-textures)

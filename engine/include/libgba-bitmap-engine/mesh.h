@@ -23,6 +23,7 @@ private:
 public:
 
     void add(VectorFx coords, VectorFx normal);
+    void add(VectorFx coords, VectorFx normal, float u, float v);
     void add(VectorFx v);
     void addFace(int a, int b, int c);
 

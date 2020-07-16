@@ -19,12 +19,8 @@ var result =
     "\t auto obj = new Mesh();\n";
 
 var vertices = 0;
-function addMesh(x, y, z) {
-    result += `\t obj->add(VectorFx::fromFloat(${x}, ${y}, ${z}));\n`;
-    vertices++;
-}
-function addMeshWithNormals(x, y, z, nx, ny, nz) {
-    result += `\t obj->add(VectorFx::fromFloat(${x}, ${y}, ${z}), VectorFx::fromFloat(${nx}, ${ny}, ${nz}));\n`;
+function addMeshWithNormals(x, y, z, nx, ny, nz, u, v) {
+    result += `\t obj->add(VectorFx::fromFloat(${x}, ${y}, ${z}), VectorFx::fromFloat(${nx}, ${ny}, ${nz}), ${u}, ${v});\n`;
     vertices++;
 }
 var faces = 0;
@@ -70,25 +66,33 @@ for(var meshIndex = 0; meshIndex < jsonObject.meshes.length; meshIndex++) {
     }
     var verticesCount = verticesArray.length / verticesStep;
     var facesCount = indicesArray.length / 3;
-    //var mesh = new SoftEngine.Mesh(jsonObject.meshes[meshIndex].name, verticesCount, facesCount);
     for(var index = 0; index < verticesCount; index++) {
         var x = verticesArray[index * verticesStep];
         var y = verticesArray[index * verticesStep + 1];
         var z = verticesArray[index * verticesStep + 2];
+        var u = 0, v = 0;
 
         if(x !== undefined && y !== undefined && z !== undefined) {
             if(data && data.normals) {
                 var nx = data.normals[index * verticesStep];
                 var ny = data.normals[index * verticesStep + 1];
                 var nz = data.normals[index * verticesStep + 2];
+                if(data.uvs) {
+                    u = data.uvs[index];
+                    v = data.uvs[index + 1];
+                }
 
-                addMeshWithNormals(x, y, z, nx, ny, nz);
+                addMeshWithNormals(x, y, z, nx, ny, nz, u, v);
             } else {
                 var nx = verticesArray[index * verticesStep + 3];
                 var ny = verticesArray[index * verticesStep + 4];
                 var nz = verticesArray[index * verticesStep + 5];
+                if(uvCount > 0) {
+                    u = verticesArray[index * verticesStep + 6];
+                    v = verticesArray[index * verticesStep + 7];
+                }
 
-                addMeshWithNormals(x, y, z, nx, ny, nz);
+                addMeshWithNormals(x, y, z, nx, ny, nz, u, v);
             }
         } else {
             console.log(`WARN; vertices index ${index} with step ${verticesStep} contains invalid data: ${x}, ${y}, ${z}`)
@@ -110,7 +114,7 @@ for(var meshIndex = 0; meshIndex < jsonObject.meshes.length; meshIndex++) {
 }
 
 done();
-fs.writeFileSync('src/mesh.cpp', result);
+fs.writeFileSync(args[1], result);
 console.log(`mesh.cpp written; ${vertices} vertices and ${faces} faces. GLHF!`)
 if(vertices > 800) {
     console.log('WARNING lots of vertices detected, this will not run well...');

@@ -14,6 +14,10 @@ void Mesh::add(VectorFx coords, VectorFx normal) {
     verticesArr.push_back(std::unique_ptr<Vertex>(new Vertex(coords, normal)));
 }
 
+void Mesh::add(VectorFx coords, VectorFx normal, float u, float v) {
+    verticesArr.push_back(std::unique_ptr<Vertex>(new Vertex(coords, normal, u, v)));
+}
+
 void Mesh::addFace(int a, int b, int c) {
     auto &vertexA = verticesArr[a];
     auto &vertexB = verticesArr[b];
